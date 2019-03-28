@@ -1,0 +1,58 @@
+
+<div class="container">
+  <button class="btn btn-primary" (click)="NewTest()">Add new Test</button>
+
+    <div class = "row d-flex flex-column pb-2">
+      <div class="col">
+        <h4>Change test:</h4>  
+        <select [(ngModel)]="testEditSelect" size="5">
+          <option *ngFor="let test of tests" [value]="test.Id" >
+            {{test.Name}}
+          </option>
+        </select>  
+        <div class="d-flex justify-content-start pt-1">
+          <button class="btn btn-primary" (click)="EditTestSelect()">Start</button>
+        </div>
+      </div>
+    </div>
+  
+    <div class = "row d-flex ">
+        <div class="col">
+        <h4>Test results:</h4>  
+            <select [(ngModel)]="userResult" size="5">
+              <option *ngFor="let user of users" [value]="user.Id" >
+                {{user.FirstName}} {{user.LastName}}
+              </option>
+            </select>  
+        </div>
+
+      <div class="col pt-2">
+        <br />
+        <select [(ngModel)]="userTest" size="5">
+          <option *ngFor="let result of results" [value]="result.Id" >
+            {{result.Name}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
+          </option>
+        </select>  
+        <div class="d-flex justify-content-start pt-1">
+          <button class="btn btn-primary" (click)="UserResultSelect()">View</button>
+        </div>
+      </div>
+      
+    </div>
+    <div class = "row d-flex ">
+        <div class="col">
+        <h4>Users status:</h4>  
+            <select [(ngModel)]="userForRole" size="5" style="width:240px">
+              <option *ngFor="let user of users" [value]="user.Id" >
+                {{user.FirstName}} {{user.LastName}} / {{user.Role}}
+              </option>
+            </select>  
+            <div class="d-flex justify-content-start pt-1">
+                <button class="btn btn-primary" (click)="SetAdmin()">Admin</button>
+            </div>
+            <div class="d-flex justify-content-start pt-1">
+                <button class="btn btn-primary" (click)="SetUser()">User</button>
+            </div>
+        </div>
+   </div>
+</div>
