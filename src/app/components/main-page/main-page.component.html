@@ -17,9 +17,9 @@
   <div class = "row d-flex flex-column">
     <div class="col">
       <h4>Test results:</h4>  
-      <select [(ngModel)]="resultSelect" size="5">
+      <select [(ngModel)]="resultSelect" size="5" style="width:240px">
         <option *ngFor="let result of results" [value]="result.Id" >
-          {{result.Name}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
+          {{result.TestName}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
         </option>
       </select>  
       <div class="d-flex justify-content-center pt-1">

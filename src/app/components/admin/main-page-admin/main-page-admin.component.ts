@@ -27,8 +27,8 @@ export class MainPageAdminComponent implements OnInit {
     });
 
     this.results = [
-    {Id: 1, Name: 'Math', UserName: 'Vasya', NumOfQuestions: 30, FinishDate: new Date('12.15.1999 15:30') },
-    {Id: 2, Name: 'Music', UserName: 'Petya', NumOfQuestions: 20, FinishDate: new Date('09.28.1999 19:30') }
+    {Id: 1, TestName: 'Math', UserName: 'Vasya', NumOfQuestions: 30, FinishDate: new Date('12.15.1999 15:30') },
+    {Id: 2, TestName: 'Music', UserName: 'Petya', NumOfQuestions: 20, FinishDate: new Date('09.28.1999 19:30') }
     ];
 
     this.users = [

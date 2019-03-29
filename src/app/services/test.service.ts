@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Test } from '../models/test';
+import { Results } from '../models/result';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,16 +16,14 @@ export class TestService {
   }
 
   testsUrl = 'http://localhost:50672/api/tests';
+  testsResultsUrl = 'http://localhost:50672/api/results/';
 
 getTests(): Observable<Test[]> {
  return this.http.get<Test[]>(this.testsUrl);
 }
 
-/*
-return [
-      {TestId: 1, Name: 'Math', NumOfQuestions: 30, Active: true, TimeLimitation: 20 },
-      {TestId: 2, Name: 'Music', NumOfQuestions: 20, Active: true, TimeLimitation: 20  },
-      {TestId: 3, Name: 'Geometry', NumOfQuestions: 35, Active: true, TimeLimitation: 20 }
-  ];
-*/
+getUserTestResults(userId: string): Observable<Results[]> {
+ return this.http.get<Results[]>(this.testsResultsUrl + userId);
+}
+
 }

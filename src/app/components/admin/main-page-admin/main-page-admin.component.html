@@ -30,7 +30,7 @@
         <br />
         <select [(ngModel)]="userTest" size="5">
           <option *ngFor="let result of results" [value]="result.Id" >
-            {{result.Name}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
+            {{result.TestName}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
           </option>
         </select>  
         <div class="d-flex justify-content-start pt-1">

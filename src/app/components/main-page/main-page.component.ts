@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Test } from 'src/app/models/test';
-import { Results } from 'src/app/models/result';
 import { TestService } from '../../services/test.service';
+import { Results } from 'src/app/models/result';
 
 @Component({
   selector: 'app-main-page',
@@ -11,6 +11,7 @@ import { TestService } from '../../services/test.service';
 export class MainPageComponent implements OnInit {
   tests: Test[];
   results: Results[];
+  userid: string;
 
   resultSelect: number;
   testSelect: number;
@@ -20,28 +21,28 @@ export class MainPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.testService.getTests().subscribe(tests => {
+      this.userid = '1';
+      this.testService.getTests().subscribe(tests => {
       this.tests = tests;
     });
 
-    this.results = [
-    {Id: 1, Name: 'Math', UserName: 'Vasya', NumOfQuestions: 30, FinishDate: new Date('12.15.1999 15:30') },
-    {Id: 2, Name: 'Music', UserName: 'Petya', NumOfQuestions: 20, FinishDate: new Date('09.28.1999 19:30') }
-  ];
+      this.testService.getUserTestResults(this.userid).subscribe(resul => {
+      this.results = resul;
+    });
 
-    this.resultSelect = 0;
-    this.testSelect = 0;
+      this.resultSelect = 0;
+      this.testSelect = 0;
   }
 
   ResultSelect() {
-    console.log("123");
+    console.log('123');
     if (this.resultSelect > 0) {
-      console.log( this.results[this.resultSelect - 1].Name );
+
     }
   }
 
   TestSelect() {
-    console.log("123");
+    console.log('123');
     if (this.testSelect > 0) {
       console.log( this.tests[this.testSelect - 1].Name );
     }
