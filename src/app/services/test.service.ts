@@ -15,15 +15,14 @@ export class TestService {
     console.log('Data service connected...');
   }
 
-  testsUrl = 'http://localhost:50672/api/tests';
-  testsResultsUrl = 'http://localhost:50672/api/results/';
+  APIurl = 'http://localhost:50672';
 
 getTests(): Observable<Test[]> {
- return this.http.get<Test[]>(this.testsUrl);
+ return this.http.get<Test[]>(this.APIurl + '/api/tests');
 }
 
 getUserTestResults(userId: string): Observable<Results[]> {
- return this.http.get<Results[]>(this.testsResultsUrl + userId);
+ return this.http.get<Results[]>(this.APIurl + '/api/results/' + userId);
 }
 
 }

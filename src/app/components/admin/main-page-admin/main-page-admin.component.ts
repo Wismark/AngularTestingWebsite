@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Test } from 'src/app/models/test';
 import { Results } from 'src/app/models/result';
-import { User } from 'src/app/models/user';
 import { TestService } from '../../../services/test.service';
+import { User } from 'src/app/_shared/authentication/auth models/user.model';
 
 @Component({
   selector: 'app-main-page-admin',
@@ -31,11 +31,11 @@ export class MainPageAdminComponent implements OnInit {
     {Id: 2, TestName: 'Music', UserName: 'Petya', NumOfQuestions: 20, FinishDate: new Date('09.28.1999 19:30') }
     ];
 
-    this.users = [
-      {Id: 1, FirstName: 'Jonh', LastName: 'Doe', Role: 'admin'},
-      {Id: 2, FirstName: 'Mikel', LastName: 'Karol', Role: 'user'},
-      {Id: 3, FirstName: 'Alex', LastName: 'Lovarinsky', Role: 'superadmin'}
-    ];
+  /*  this.users = [
+      {FirstName: 'Jonh', LastName: 'Doe', Role: 'admin'},
+      {FirstName: 'Mikel', LastName: 'Karol', Role: 'user'},
+      {FirstName: 'Alex', LastName: 'Lovarinsky', Role: 'superadmin'}
+    ];*/
 
     this.testEditSelect = 0;
     this.userResult = 0;

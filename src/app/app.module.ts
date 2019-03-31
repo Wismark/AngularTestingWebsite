@@ -10,9 +10,12 @@ import { RegistrationComponent } from './_shared/authentication/registration/reg
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { MainPageAdminComponent } from './components/admin/main-page-admin/main-page-admin.component';
 
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { from } from 'rxjs';
 import { TestService } from './services/test.service';
 import { ViewTestComponent } from './components/admin/view-test/view-test.component';
+import { UserService } from './_shared/authentication/auth services/user.service';
 
 @NgModule({
   declarations: [
@@ -27,9 +30,11 @@ import { ViewTestComponent } from './components/admin/view-test/view-test.compon
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule
   ],
-  providers: [TestService],
+  providers: [TestService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
