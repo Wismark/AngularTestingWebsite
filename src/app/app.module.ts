@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,9 @@ import { from } from 'rxjs';
 import { TestService } from './services/test.service';
 import { ViewTestComponent } from './components/admin/view-test/view-test.component';
 import { UserService } from './_shared/authentication/auth services/user.service';
+import { UserComponent } from './_shared/authentication/user/user.component';
+import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
+import { AuthInterceptor } from './_shared/authentication/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,7 @@ import { UserService } from './_shared/authentication/auth services/user.service
     MainPageComponent,
     MainPageAdminComponent,
     ViewTestComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,12 @@ import { UserService } from './_shared/authentication/auth services/user.service
     ToastrModule.forRoot(),
     BrowserAnimationsModule
   ],
-  providers: [TestService, UserService],
+  providers: [TestService, UserService, AuthGuard,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass : AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

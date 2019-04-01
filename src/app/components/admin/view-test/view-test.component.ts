@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Area } from 'src/app/models/area';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-test',
@@ -8,7 +9,7 @@ import { Area } from 'src/app/models/area';
 })
 export class ViewTestComponent implements OnInit {
   areas: Area [];
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     this.areas = [
@@ -16,6 +17,11 @@ export class ViewTestComponent implements OnInit {
       { AreaName: 'Algebra', TestAreaId: 2 },
       { AreaName: 'Dance', TestAreaId: 3 },
       ];
+  }
+
+  Logout() {
+    localStorage.removeItem('userToken');
+    this.router.navigate(['/login']);
   }
 
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { User } from '../auth models/user.model';
@@ -12,8 +12,8 @@ import { User } from '../auth models/user.model';
 export class UserService {
   readonly rootUrl = 'http://localhost:50672';
   constructor(private http: HttpClient) { }
- 
-  registerUser(user : User){
+
+  registerUser(user: User) {
     const body: User = {
       Login: user.Login,
       Password: user.Password,
@@ -22,7 +22,14 @@ export class UserService {
       LastName: user.LastName,
       MiddleName: user.MiddleName,
       DateOfBirth: user.DateOfBirth
-    }
-    return this.http.post(this.rootUrl + '/api/User/Register', body);
+    };
+    var reqHeader = new HttpHeaders({'No-Auth': 'True'});
+    return this.http.post(this.rootUrl + '/api/User/Register', body, {headers: reqHeader});
+  }
+
+  userAuthentication(userName, password) {
+    let data = 'username=' + userName + '&password=' + password + '&grant_type=password';
+    let reqHeader = new HttpHeaders({'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'True'});
+    return this.http.post(this.rootUrl + '/token', data, {headers: reqHeader} );
   }
 }

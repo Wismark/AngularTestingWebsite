@@ -1,20 +1,24 @@
 
-<div class="container">
+<div *ngIf="isLoginError"class="red-text center error-message">
+    <h5>Incorrect Username or Password</h5>
+</div>
 
+
+<form class="container" #LoginForm="ngForm" (ngSubmit)="OnSubmit(Login.value, Password.value)">
   <div class="d-flex flex-row ">
     <div class="p-3">
       <h4 class="d-inline-flex">Login:</h4>
       <h4 class="d-flex">Password:</h4>
     </div>
     <div class="">
-      <input type="email" class="form-control m-2" id="email">
-      <input type="password" class="form-control m-2" id="pwd">  
+      <input type="email" name="Login" #Login ngModel class="form-control m-2" placeholder="Login" required minlength="3">
+      <input type="password" class="form-control m-2" name="Password" #Password ngModel  placeholder="Password" required minlength="6">  
     </div>
     <div class="p-2">
     </div>
   </div>
-  <div class="d-flex flex-row">
-      <button class="btn btn-primary  m-2" (click)="Login()">Login</button>
-      <button class="btn btn-primary  m-2" (click)="Registration()">Register</button>
+  <div class="d-flex flex-row justify-content-center">
+      <button [disabled]="!LoginForm.valid" class="btn btn-primary  m-2" type="submit" >Login</button>
   </div>
-</div>
+</form>
+

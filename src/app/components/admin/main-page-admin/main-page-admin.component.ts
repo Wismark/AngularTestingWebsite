@@ -3,6 +3,7 @@ import { Test } from 'src/app/models/test';
 import { Results } from 'src/app/models/result';
 import { TestService } from '../../../services/test.service';
 import { User } from 'src/app/_shared/authentication/auth models/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-page-admin',
@@ -19,7 +20,7 @@ export class MainPageAdminComponent implements OnInit {
   userTest: number;
   userForRole: number;
 
-  constructor(private testService: TestService) { }
+  constructor(private testService: TestService, private router: Router) { }
 
   ngOnInit() {
     this.testService.getTests().subscribe(tests => {
@@ -41,6 +42,11 @@ export class MainPageAdminComponent implements OnInit {
     this.userResult = 0;
     this.userTest = 0;
     this.userForRole = 0;
+  }
+
+  Logout() {
+    localStorage.removeItem('userToken');
+    this.router.navigate(['/login']);
   }
 
 }
