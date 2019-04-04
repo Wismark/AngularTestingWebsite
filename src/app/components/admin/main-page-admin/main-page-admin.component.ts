@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Test } from 'src/app/models/test';
 import { Results } from 'src/app/models/result';
 import { TestService } from '../../../services/test.service';
-import { User } from 'src/app/_shared/authentication/auth models/user.model';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/_shared/authentication/auth services/user.service';
+import { UserModel } from 'src/app/models/userModel';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-main-page-admin',
@@ -13,35 +15,33 @@ import { Router } from '@angular/router';
 export class MainPageAdminComponent implements OnInit {
   tests: Test[];
   results: Results[];
-  users: User[];
+  users: UserModel[];
+  allUsers: UserModel[];
 
-  testEditSelect: number;
+  testSelect: number;
   userResult: number;
   userTest: number;
-  userForRole: number;
+  userForRole: string;
 
-  constructor(private testService: TestService, private router: Router) { }
+  constructor(private userService: UserService, private testService: TestService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.testService.getTests().subscribe(tests => {
-      this.tests = tests;
+    this.tests = tests;
     });
 
-    this.results = [
-    {Id: 1, TestName: 'Math', UserName: 'Vasya', NumOfQuestions: 30, FinishDate: new Date('12.15.1999 15:30') },
-    {Id: 2, TestName: 'Music', UserName: 'Petya', NumOfQuestions: 20, FinishDate: new Date('09.28.1999 19:30') }
-    ];
+    this.testService.getUsersWithResults().subscribe(users => {
+      this.users = users;
+    });
 
-  /*  this.users = [
-      {FirstName: 'Jonh', LastName: 'Doe', Role: 'admin'},
-      {FirstName: 'Mikel', LastName: 'Karol', Role: 'user'},
-      {FirstName: 'Alex', LastName: 'Lovarinsky', Role: 'superadmin'}
-    ];*/
+    this.testService.getAllUsers().subscribe(users => {
+      this.allUsers = users;
+    });
 
-    this.testEditSelect = 0;
+    this.testSelect = 0;
     this.userResult = 0;
     this.userTest = 0;
-    this.userForRole = 0;
+    this.userForRole = '123';
   }
 
   Logout() {
@@ -49,4 +49,41 @@ export class MainPageAdminComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  SetAdminClick() {
+    this.userService.SetAdminRole(this.userForRole).subscribe( (data: any) => {
+      this.CheckRoleChangeResponse(data);
+    });
+  }
+
+  SetUserClick() {
+    this.userService.SetUserRole(this.userForRole).subscribe( (data: any) => {
+      this.CheckRoleChangeResponse(data);
+    });
+  }
+
+  CheckRoleChangeResponse( response: number)  {
+    if (response === 0) {
+      this.toastr.error('Error, user not found!');
+    }
+    if (response === 1 ) {
+      this.toastr.success('Role was updated!');
+      this.ngOnInit();
+    }
+    if (response === 2 ) {
+        this.toastr.warning('User already have this role!');
+    }
+    if (response === 3 ) {
+      this.toastr.error ('Error! Cannot update this user role');
+    }
+  }
+
+
+  EditTestSelectClick() {
+    localStorage.ViewTestId = this.testSelect;
+    this.router.navigate(['/test-view']);
+  }
+
+  StartTestClick() {
+    console.log(this.testSelect);
+  }
 }

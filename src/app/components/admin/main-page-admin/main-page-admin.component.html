@@ -1,21 +1,22 @@
 
 <div class="container">
-    <div> 
-        <button (click)="Logout()" class="btn btn-primary"> Logout </button>
+    <div class="d-flex justify-content-center">  
+        <button (click)="Logout()" class="btn btn-primary mb-2"> Logout </button>
     </div>
-    
+    <br />
   <button class="btn btn-primary" (click)="NewTest()">Add new Test</button>
 
     <div class = "row d-flex flex-column pb-2">
       <div class="col">
         <h4>Change test:</h4>  
-        <select [(ngModel)]="testEditSelect" size="5">
-          <option *ngFor="let test of tests" [value]="test.Id" >
+        <select [(ngModel)]="testSelect" size="5">
+          <option *ngFor="let test of tests" [value]="test.TestId" >
             {{test.Name}}
           </option>
         </select>  
         <div class="d-flex justify-content-start pt-1">
-          <button class="btn btn-primary" (click)="EditTestSelect()">Start</button>
+          <button class="btn btn-primary" (click)="StartTestClick()">Start</button>
+          <button class="btn btn-primary ml-2" (click)="EditTestSelectClick()">Edit</button>
         </div>
       </div>
     </div>
@@ -32,7 +33,7 @@
 
       <div class="col pt-2">
         <br />
-        <select [(ngModel)]="userTest" size="5">
+        <select [(ngModel)]="userTest" size="5" class="mt-1">
           <option *ngFor="let result of results" [value]="result.Id" >
             {{result.TestName}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
           </option>
@@ -43,20 +44,22 @@
       </div>
       
     </div>
-    <div class = "row d-flex ">
+    <div class = "row d-flex " *ngIf="userService.roleMatch(['SuperAdmin'])">
         <div class="col">
         <h4>Users status:</h4>  
-            <select [(ngModel)]="userForRole" size="5" style="width:240px">
-              <option *ngFor="let user of users" [value]="user.Id" >
-                {{user.FirstName}} {{user.LastName}} / {{user.Role}}
+            <select [(ngModel)]="userForRole" size="5" style="width:300px">
+              <option *ngFor="let user of allUsers" [value]="user.UserId" >
+                {{user.FirstName}} {{user.LastName}} / {{user.Login}} | Role: {{user.Role}}
               </option>
-            </select>  
-            <div class="d-flex justify-content-start pt-1">
-                <button class="btn btn-primary" (click)="SetAdmin()">Admin</button>
-            </div>
-            <div class="d-flex justify-content-start pt-1">
-                <button class="btn btn-primary" (click)="SetUser()">User</button>
-            </div>
+            </select>
+            <div class="d-flex flex-row"> 
+                <div class="d-flex justify-content-start pt-1">
+                    <button class="btn btn-primary" (click)="SetAdminClick()">Admin</button>
+                </div>
+                <div class="d-flex justify-content-start pt-1 pl-2">
+                    <button class="btn btn-primary" (click)="SetUserClick()">User</button>
+                </div
+            ></div>  
         </div>
    </div>
 </div>

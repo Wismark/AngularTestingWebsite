@@ -22,36 +22,36 @@ export class RegistrationComponent implements OnInit {
       Email: '',
       Password: '',
       Login: '',
-      DateOfBirth: new Date()
+      DateOfBirth: new Date(),
     };
 
   }
 
   resetForm(form?: NgForm) {
     if (form != null) {
-    form.reset();
-    this.user = {
-      LastName: '',
-      FirstName: '',
-      MiddleName: '',
-      Email: '',
-      Password: '',
-      Login: '',
-      DateOfBirth: new Date()
-    };
+      form.reset();
+      this.user = {
+        LastName: '',
+        FirstName: '',
+        MiddleName: '',
+        Email: '',
+        Password: '',
+        Login: '',
+        DateOfBirth: new Date(),
+      };
     }
   }
 
   OnSubmit(form: NgForm) {
     this.userService.registerUser(form.value)
-    .subscribe( (data: any) => {
-      if (data.Succeeded == true) {
-        this.resetForm(form);
-        this.toastr.success('User registration successful');
-      } else {
-        this.toastr.error(data.Errors[0]);
-      }
-    });
+      .subscribe((data: any) => {
+        if (data.Succeeded === true) {
+          this.resetForm(form);
+          this.toastr.success('User registration successful');
+        } else {
+          this.toastr.error(data.Errors[0]);
+        }
+      });
   }
 
 }

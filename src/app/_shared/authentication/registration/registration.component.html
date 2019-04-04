@@ -2,13 +2,13 @@
 <form class="container" #userRegistrationForm="ngForm" (ngSubmit)="OnSubmit(userRegistrationForm)">  
     <div class="d-flex flex-row align-items-start ">
       <div class="p-3">
-        <h5 class="d-flex ">Login:</h5>
-        <h5 class="d-flex ">Password:</h5>
-        <h5 class="d-flex ">First Name:</h5>
-        <h5 class="d-flex ">Last Name:</h5>
+        <h5 class="d-flex ">Login (*):</h5>
+        <h5 class="d-flex ">Password (*):</h5>
+        <h5 class="d-flex ">First Name (*):</h5>
+        <h5 class="d-flex ">Last Name (*):</h5>
         <h5 class="d-flex ">Middle Name:</h5>
         <h5 class="d-flex ">Date of birth:</h5>
-        <h5 class="d-flex ">Email:</h5>
+        <h5 class="d-flex ">Email (*):</h5>
       </div>
       <div class="pt-1">
         <input type="text" class="form-control m-2" name='Login' #Login="ngModel" [(ngModel)]="user.Login" required minlength="3">
@@ -16,7 +16,7 @@
         <input type="text" class="form-control m-2" name='FirstName' #FirstName="ngModel" [(ngModel)]="user.FirstName" required >
         <input type="text" class="form-control m-2"  name='LastName' #LastName="ngModel" [(ngModel)]="user.LastName" required >
         <input type="text" class="form-control m-2" name='MiddleName' #MiddleName="ngModel" [(ngModel)]="user.MiddleName" >
-        <input type="date" class="form-control m-2" name='DateOfBirth' #DateOfBirth="ngModel" [(ngModel)]="user.DateOfBirth" required >
+        <input type="date" class="form-control m-2" name='DateOfBirth' #DateOfBirth="ngModel" [(ngModel)]="user.DateOfBirth" >
         <input type="text" class="form-control m-2" name='Email' #Email="ngModel" [(ngModel)]="user.Email" required  [pattern]='emailPattern'>
       </div>
       <div class="p-2">

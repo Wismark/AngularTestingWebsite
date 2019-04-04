@@ -1,9 +1,4 @@
 
-<div *ngIf="isLoginError"class="red-text center error-message">
-    <h5>Incorrect Username or Password</h5>
-</div>
-
-
 <form class="container" #LoginForm="ngForm" (ngSubmit)="OnSubmit(Login.value, Password.value)">
   <div class="d-flex flex-row ">
     <div class="p-3">

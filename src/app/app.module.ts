@@ -19,6 +19,8 @@ import { UserService } from './_shared/authentication/auth services/user.service
 import { UserComponent } from './_shared/authentication/user/user.component';
 import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
 import { AuthInterceptor } from './_shared/authentication/auth.interceptor';
+import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
+
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { AuthInterceptor } from './_shared/authentication/auth.interceptor';
     MainPageAdminComponent,
     ViewTestComponent,
     UserComponent,
+    ForbiddenComponent,
   ],
   imports: [
     BrowserModule,

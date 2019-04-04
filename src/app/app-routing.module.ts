@@ -7,14 +7,17 @@ import { MainPageAdminComponent } from './components/admin/main-page-admin/main-
 import { ViewTestComponent } from './components/admin/view-test/view-test.component';
 import { UserComponent } from './_shared/authentication/user/user.component';
 import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
+import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
+
 
 
 const routes: Routes = [
   {path: '', component: MainPageComponent, canActivate:[AuthGuard]},
   {path: 'login', component: UserComponent},
   {path: 'register', component: RegistrationComponent},
-  {path: 'admin', component: MainPageAdminComponent, canActivate:[AuthGuard]},
-  {path: 'test-view', component: ViewTestComponent, canActivate:[AuthGuard]}
+  {path: 'admin', component: MainPageAdminComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
+  {path: 'test-view', component: ViewTestComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
+  {path: 'forbidden', component: ForbiddenComponent, canActivate: [AuthGuard]},
 
  // {path: '', redirectTo: '/login', pathMatch:'full'}
 ];

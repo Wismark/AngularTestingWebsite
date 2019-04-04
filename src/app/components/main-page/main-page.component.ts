@@ -27,7 +27,7 @@ export class MainPageComponent implements OnInit {
       this.tests = tests;
     });
 
-      this.testService.getUserTestResults(this.userid).subscribe(resul => {
+      this.testService.getTestResultsByUserId(this.userid).subscribe(resul => {
       this.results = resul;
     });
 

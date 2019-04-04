@@ -3,6 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Test } from '../models/test';
 import { Results } from '../models/result';
 import { Observable } from 'rxjs';
+import { User } from '../_shared/authentication/auth models/user.model';
+import { UserModel } from '../models/userModel';
+import { Area } from '../models/area';
+import { Question } from '../models/questionModel';
 
 @Injectable({
   providedIn: 'root'
@@ -10,19 +14,37 @@ import { Observable } from 'rxjs';
 
 
 export class TestService {
-
-  constructor(private http: HttpClient ) {
+  constructor(private http: HttpClient) {
     console.log('Data service connected...');
   }
 
   APIurl = 'http://localhost:50672';
 
-getTests(): Observable<Test[]> {
- return this.http.get<Test[]>(this.APIurl + '/api/tests');
-}
+  getTests(): Observable<Test[]> {
+    return this.http.get<Test[]>(this.APIurl + '/api/tests');
+  }
 
-getUserTestResults(userId: string): Observable<Results[]> {
- return this.http.get<Results[]>(this.APIurl + '/api/results/' + userId);
-}
+  getTestResultsByUserId(userId: string): Observable<Results[]> {
+    return this.http.get<Results[]>(this.APIurl + '/api/results/' + userId);
+  }
 
+  getUsersWithResults(): Observable<UserModel[]> {
+    return this.http.get<UserModel[]>(this.APIurl + '/api/users/result');
+  }
+
+  getAllUsers(): Observable<UserModel[]> {
+    return this.http.get<UserModel[]>(this.APIurl + '/api/users');
+  }
+
+  getTestInfoById(testId: number): Observable<Test> {
+    return this.http.get<Test>(this.APIurl + '/api/test-info/' + testId );
+  }
+
+  getTestAreaById(testId: number): Observable<Area[]> {
+    return this.http.get<Area[]>(this.APIurl + '/api/tests/areas/' + testId );
+  }
+
+  getTestQuestionsById(testId: number): Observable<Question[]> {
+    return this.http.get<Question[]>(this.APIurl + '/api/tests/questions/' + testId );
+  }
 }
