@@ -1,4 +1,4 @@
-export class Question {
+export class QuestionInfo {
     public Id: number;
     public Text: string;
     public Area: string;

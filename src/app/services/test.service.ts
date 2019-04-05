@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_shared/authentication/auth models/user.model';
 import { UserModel } from '../models/userModel';
 import { Area } from '../models/area';
-import { Question } from '../models/questionModel';
+import { QuestionInfo } from '../models/QuestionInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +44,7 @@ export class TestService {
     return this.http.get<Area[]>(this.APIurl + '/api/tests/areas/' + testId );
   }
 
-  getTestQuestionsById(testId: number): Observable<Question[]> {
-    return this.http.get<Question[]>(this.APIurl + '/api/tests/questions/' + testId );
+  getTestQuestionsById(testId: number): Observable<QuestionInfo[]> {
+    return this.http.get<QuestionInfo[]>(this.APIurl + '/api/tests/questions/' + testId );
   }
 }

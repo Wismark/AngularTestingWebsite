@@ -8,6 +8,7 @@ import { ViewTestComponent } from './components/admin/view-test/view-test.compon
 import { UserComponent } from './_shared/authentication/user/user.component';
 import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
 import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
+import { ViewQuestionComponent } from './components/admin/view-question/view-question.component';
 
 
 
@@ -18,6 +19,7 @@ const routes: Routes = [
   {path: 'admin', component: MainPageAdminComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
   {path: 'test-view', component: ViewTestComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
   {path: 'forbidden', component: ForbiddenComponent, canActivate: [AuthGuard]},
+  {path: 'question-view', component: ViewQuestionComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
 
  // {path: '', redirectTo: '/login', pathMatch:'full'}
 ];

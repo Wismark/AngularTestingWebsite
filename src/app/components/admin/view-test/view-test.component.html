@@ -1,9 +1,9 @@
 <div class="container">
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-2">
         <button (click)="Logout()" class="btn btn-primary"> Logout </button>
         <button [routerLink]="['/admin']" class="btn btn-primary ml-3"> Back </button>
     </div>
-
+    <hr>
     <h3>{{Title}}</h3>
 
     <div class="d-flex flex-row ">
@@ -12,12 +12,12 @@
             <h4 class="d-flex">Time limitation:</h4>
         </div>
         <div class="">
-            <input type="text"  [(ngModel)]="testInfo.Name" class="form-control m-2" id="title">
-            <input type="text"  [(ngModel)]="testInfo.TimeLimitation" class="form-control m-2" id="timeLim">
+            <input type="text"  [(ngModel)]="testInfo.Name" (change)='StateChange()' class="form-control m-2" id="title">
+            <input type="text"  [(ngModel)]="testInfo.TimeLimitation" (change)='StateChange()' class="form-control m-2" id="timeLim">
         </div>
         <div class="form-check ml-3 mt-3">
             <label class="form-check-label">
-                <input type="checkbox" [(ngModel)]="testInfo.Active" />
+                <input type="checkbox" [(ngModel)]="testInfo.Active" (change)='StateChange()'/>
                 Active
             </label>
         </div>
@@ -25,28 +25,28 @@
 
     <hr>
     <h3>Test area:</h3>
-
-    <table class="table table-bordered" style="width: 300px"> <!-- TODO: Style   [(ngModel)]="removeArea[i]" -->
-        <thead>
-            <th style="width: 170px">Name</th>
-            <th>Delete</th>
-        </thead>
-        <tr *ngFor="let area of areas; let i = index">
-            <td>
-                <input type="text" class="form-control m-2" id="title" value="{{area.AreaName}}" style="width: 150px">
-            </td>
-            <td>
-                    <label class="form-check-label mt-3">
-                            <input type="checkbox"  (click)="OnDeleteAreas(i)" />
-                            Delete
-                    </label>
-            </td>
-        </tr>
-    </table>
-
-    <div class="row">
-        <button class="btn btn-primary ml-3" (click)="AddAreaClick()">Add New</button>
-        <button class="btn btn-primary ml-5" (click)="RemoveAreasClick()">Delete</button>
+    <div class="container d-inline-flex d-flex flex-column" style="width: 320px"> <!-- TODO: Style -->
+        <table class="table table-bordered"> 
+            <thead>
+                <th style="width: 170px">Name</th>
+                <th>Delete</th>
+            </thead>
+            <tr *ngFor="let area of areas; let i = index">
+                <td>
+                    <input type="text" class="form-control m-2" id="title" value="{{area.AreaName}}" style="width: 150px">
+                </td>
+                <td>
+                        <label class="form-check-label mt-3">
+                                <input type="checkbox"  (click)="OnDeleteAreas(i)" />
+                                Delete
+                        </label>
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex justify-content-between bd-highlight">
+            <button class="btn btn-primary " (click)="AddAreaClick()">Add New</button>
+            <button class="btn btn-primary " (click)="RemoveAreasClick()">Delete</button>
+        </div>
     </div>
     <hr>
     <h3>Questions:</h3>
@@ -65,7 +65,7 @@
                 <input type="text" class="form-control m-2" id="title" value="{{question.Text}}" style="width: 150px">
             </td>
             <td>
-                <input type="text" class="form-control m-2" id="title" value="{{question.NumOfImages}}" style="width: 150px">
+                <input type="text" class="form-control m-2" id="title" value="{{question.NumOfImages}}" style="width: 100px">
             </td>
             <td>
                 <input type="text" class="form-control m-2" id="title" value="{{question.QuestionType}}" style="width: 150px">
@@ -80,19 +80,46 @@
                 <button class="btn btn-primary mt-1" (click)="Edit()">Edit</button>
             </td>
             <td >
-                <div class="form-check mt-3">
-                    <input class="form-check-input" type="checkbox" value="" id="{{i}}">
-                    <label class="form-check-label" for="{{i}}">
-                        Delete
-                    </label>
-                </div>
+                <label class="form-check-label mt-3">
+                    <input type="checkbox"  (click)="OnDeleteQuestions(i)" />
+                    Delete
+                </label>
             </td> 
         </tr>
     </table>
     <div class="d-flex justify-content-between bd-highlight mb-3">
-        <button (click)="SaveChanges()" class="btn btn-primary  "> Add new </button>
-        <button (click)="SaveChanges()" class="btn btn-primary  " > Delete  </button>
+        <button (click)="AddNewQuestionClick()" class="btn btn-primary  "> Add new </button>
+        <button (click)="RemoveQuestionClick()" class="btn btn-primary  "> Delete  </button>
     </div>
+    <hr>
+    <h3>Old Versions:</h3>
+    <table class="table table-bordered">
+        <thead>
+            <th>Old title</th>
+            <th>Number of questions</th>
+            <th>Start date</th>
+            <th>Finish date</th>
+            <th>View</th>
+        </thead>
+        <!-- TODO -->
+        <tr *ngFor="let question of questions; let i = index"> 
+            <td>
+                <input type="text" class="form-control m-2" id="title" value="{{question.Text}}" style="width: 150px">
+            </td>
+            <td>
+                <input type="text" class="form-control m-2" id="title" value="{{question.NumOfImages}}" style="width: 100px">
+            </td>
+            <td>
+                <input type="text" class="form-control m-2" id="title" value="{{question.QuestionType}}" style="width: 150px">
+            </td>
+            <td>
+                <input type="text" class="form-control m-2" id="title" value="{{question.Answers}}" style="width: 150px">
+            </td>
+            <td>
+                <button class="btn btn-primary mt-1" (click)="ViewOldTest()">View</button>
+            </td>
+        </tr>
+    </table>
 
     <div class="d-flex justify-content-center">
         <button (click)="SaveChanges()" class="btn btn-secondary"> Save Changes </button>

@@ -20,6 +20,7 @@ import { UserComponent } from './_shared/authentication/user/user.component';
 import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
 import { AuthInterceptor } from './_shared/authentication/auth.interceptor';
 import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
+import { ViewQuestionComponent } from './components/admin/view-question/view-question.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
     ViewTestComponent,
     UserComponent,
     ForbiddenComponent,
+    ViewQuestionComponent,
   ],
   imports: [
     BrowserModule,

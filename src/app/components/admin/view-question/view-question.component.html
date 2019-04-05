@@ -1,0 +1,101 @@
+<div class="container" style="width: 950px">
+
+      <div class="d-flex justify-content-center mt-2">
+          <button (click)="Logout()" class="btn btn-primary"> Logout </button>
+          <button [routerLink]="['/test-view']" class="btn btn-primary ml-3"> Back </button>
+      </div>
+        <hr>
+        <h3>{{Title}}</h3>
+        <hr>
+      <div class="d-flex flex-column ">
+          <h5>Question text:</h5>
+          <textarea name="QuestionText" id="" cols="100" rows="3" [(ngModel)]="info.Text"></textarea>
+      </div>
+
+      <div class="d-flex flex-row">
+        <h5>Question type:</h5>
+        <div class="form-check-inline ml-4">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name='type' (change)='QTypeChange(1)' >Radio
+            </label>
+        </div>
+        <div class="form-check-inline">
+          <label class="form-check-label">
+            <input type="radio" class="form-check-input"  name='type' (change)='QTypeChange(2)' >Check
+          </label>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row mt-2">
+      <h5>Test area:</h5>  
+        <select [(ngModel)]="areaSelect" class="ml-3 pt-1" style="height:90%" >
+          <option *ngFor="let area of testAreas; let i = index" [value]="i" >
+            {{area.AreaName}}
+          </option>
+        </select>
+      </div>
+
+      <hr>
+
+      <div class="container d-inline-flex flex-column removePadings" style="width: 80%">
+          <h5>Answers:</h5>
+          <table class="table table-bordered"> <!-- TODO: Style  -->
+            <thead>
+                <th style="width: 170px">Text</th>
+                <th style="width: 80px">Correct</th>
+                <th>Delete</th>
+            </thead>
+            <tr *ngFor="let answer of answers; let i = index">
+                <td>
+                    <input type="text" class="form-control m-2" id="title" [(ngModel)]='answer.Text' style="width: 350px">
+                </td>
+                <td>
+                    <div class="form-check-inline ml-4 mt-3">
+                        <label class="form-check-label">
+                          <input type="radio" class="form-check-input" name='optradio' (change)='onChangeCorrect(i)'/>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                        <label class="form-check-label mt-3">
+                                <input type="checkbox"  (click)="OnDeleteAnswers(i)" />
+                                Delete
+                        </label>
+                </td>
+            </tr>
+        </table>
+        <div class="d-flex justify-content-between bd-highlight">
+            <button class="btn btn-primary" (click)="AddAnswerClick()">Add New</button>
+            <button class="btn btn-primary ml-5" (click)="RemoveAnswersClick()">Delete</button>
+        </div>
+      </div>
+
+      <hr>
+      <h5>Images:</h5>
+      <div  *ngFor="let image of images; let i = index" class="d-flex flex-row d-inline-flex" >
+        <img *ngIf="imagesUrl[i]" [src]='imagesUrl[i]' height="150" width="200"/>
+          <div class="col">
+            <button class="btn btn-primary ml-1 mt-5" (click)="RemoveImage(i)">Delete</button> 
+         </div>
+      </div>
+      <br/>
+      <div class="container d-flex justify-content-between removePadings"> 
+        <input type="text" class="text mr-2" style="width:600px"  [(ngModel)]='Files'>
+        <button class="btn btn-primary ml-3" (click)="uploader.click()">Browse</button>
+        <input  type="file"  #uploader  style="display: none"  (change)="onFileAdded($event) " accept="image/*" multiple/>
+        <button class="btn btn-primary ml-3" (click)="UploadClick()">Upload</button>
+      </div>
+
+      <hr>
+
+      <div class="d-flex justify-content-between bd-highlight mb-1 removePadings">          
+          <button class="btn btn-info" (click)="FirstQclick()"> &laquo; First</button>
+          <button class="btn btn-info ml-3" (click)="PreviousQclick()"> &lsaquo; Previous</button>
+          <button class="btn btn-info ml-3" (click)="CancelQclick()"> Cancel </button>
+          <button class="btn btn-info ml-3" (click)="NextQclick()"> Next &rsaquo; </button>
+          <button class="btn btn-info ml-3" (click)="LastQclick()"> Last &raquo;</button>
+          <button class="btn btn-info ml-3" (click)="DoneQclick()"> Save</button>
+      </div>
+      <br/>
+      <br/>
+  </div>
