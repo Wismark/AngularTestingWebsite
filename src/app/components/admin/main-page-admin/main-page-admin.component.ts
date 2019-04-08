@@ -50,18 +50,18 @@ export class MainPageAdminComponent implements OnInit {
   }
 
   SetAdminClick() {
-    this.userService.SetAdminRole(this.userForRole).subscribe( (data: any) => {
-      this.CheckRoleChangeResponse(data);
+    this.userService.setAdminRole(this.userForRole).subscribe( (data: any) => {
+      this.checkRoleChangeResponse(data);
     });
   }
 
   SetUserClick() {
-    this.userService.SetUserRole(this.userForRole).subscribe( (data: any) => {
-      this.CheckRoleChangeResponse(data);
+    this.userService.setUserRole(this.userForRole).subscribe( (data: any) => {
+      this.checkRoleChangeResponse(data);
     });
   }
 
-  CheckRoleChangeResponse( response: number)  {
+  checkRoleChangeResponse( response: number)  {
     if (response === 0) {
       this.toastr.error('Error, user not found!');
     }

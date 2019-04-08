@@ -16,12 +16,12 @@
         <h5>Question type:</h5>
         <div class="form-check-inline ml-4">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" name='type' (change)='QTypeChange(1)' >Radio
+              <input type="radio" class="form-check-input" name='type' (change)='qTypeChange(1)' checked >Radio
             </label>
         </div>
         <div class="form-check-inline">
           <label class="form-check-label">
-            <input type="radio" class="form-check-input"  name='type' (change)='QTypeChange(2)' >Check
+            <input type="radio" class="form-check-input"  name='type' (change)='qTypeChange(2)' >Check
           </label>
         </div>
       </div>
@@ -51,50 +51,54 @@
                 </td>
                 <td>
                     <div class="form-check-inline ml-4 mt-3">
-                        <label class="form-check-label">
+                        <label *ngIf="Qtype!=='check'" class="form-check-label">
                           <input type="radio" class="form-check-input" name='optradio' (change)='onChangeCorrect(i)'/>
+                        </label>
+                        <label *ngIf="Qtype==='check'" class="form-check-label">
+                          <input type="checkbox" class="form-check-input" name='optradio' (change)='onChangeCorrect(i)'/>
                         </label>
                     </div>
                 </td>
                 <td>
                         <label class="form-check-label mt-3">
-                                <input type="checkbox"  (click)="OnDeleteAnswers(i)" />
+                                <input type="checkbox"  (click)="onDeleteAnswers(i)" />
                                 Delete
                         </label>
                 </td>
             </tr>
         </table>
         <div class="d-flex justify-content-between bd-highlight">
-            <button class="btn btn-primary" (click)="AddAnswerClick()">Add New</button>
-            <button class="btn btn-primary ml-5" (click)="RemoveAnswersClick()">Delete</button>
+            <button class="btn btn-primary" (click)="addAnswerClick()">Add New</button>
+            <button class="btn btn-primary ml-5" (click)="removeAnswersClick()">Delete</button>
         </div>
       </div>
 
       <hr>
       <h5>Images:</h5>
-      <div  *ngFor="let image of images; let i = index" class="d-flex flex-row d-inline-flex" >
-        <img *ngIf="imagesUrl[i]" [src]='imagesUrl[i]' height="150" width="200"/>
+      <div  *ngFor="let image of imagesUrl; let i = index" class="d-flex flex-row d-inline-flex" >
+        <img [src]='imagesUrl[i]' height="150" width="200"/> 
+        <!-- *ngIf="imagesUrl[i]" -->
           <div class="col">
-            <button class="btn btn-primary ml-1 mt-5" (click)="RemoveImage(i)">Delete</button> 
+            <button class="btn btn-primary ml-1 mt-5" (click)="removeImage(i)">Delete</button> 
          </div>
       </div>
       <br/>
       <div class="container d-flex justify-content-between removePadings"> 
         <input type="text" class="text mr-2" style="width:600px"  [(ngModel)]='Files'>
         <button class="btn btn-primary ml-3" (click)="uploader.click()">Browse</button>
-        <input  type="file"  #uploader  style="display: none"  (change)="onFileAdded($event) " accept="image/*" multiple/>
-        <button class="btn btn-primary ml-3" (click)="UploadClick()">Upload</button>
+        <input  type="file"  #uploader  style="display: none"  (change)="onFileAdded($event)" value='null' accept="image/*" multiple/>
+        <button class="btn btn-primary ml-3" (click)="uploadClick()">Upload</button>
       </div>
 
       <hr>
 
       <div class="d-flex justify-content-between bd-highlight mb-1 removePadings">          
-          <button class="btn btn-info" (click)="FirstQclick()"> &laquo; First</button>
-          <button class="btn btn-info ml-3" (click)="PreviousQclick()"> &lsaquo; Previous</button>
-          <button class="btn btn-info ml-3" (click)="CancelQclick()"> Cancel </button>
-          <button class="btn btn-info ml-3" (click)="NextQclick()"> Next &rsaquo; </button>
-          <button class="btn btn-info ml-3" (click)="LastQclick()"> Last &raquo;</button>
-          <button class="btn btn-info ml-3" (click)="DoneQclick()"> Save</button>
+          <button class="btn btn-info" (click)="firstQclick()"> &laquo; First</button>
+          <button class="btn btn-info ml-3" (click)="previousQclick()"> &lsaquo; Previous</button>
+          <button class="btn btn-info ml-3" (click)="cancelQclick()"> Cancel </button>
+          <button class="btn btn-info ml-3" (click)="nextQclick()"> Next &rsaquo; </button>
+          <button class="btn btn-info ml-3" (click)="lastQclick()"> Last &raquo;</button>
+          <button class="btn btn-info ml-3" (click)="doneQclick()"> Save</button>
       </div>
       <br/>
       <br/>

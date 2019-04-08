@@ -45,11 +45,11 @@ export class UserService {
     return isMatch;
   }
 
-  SetAdminRole(userId: string) {
+  setAdminRole(userId: string) {
     return this.http.put(this.rootUrl + '/api/give-admin/?userId=' + userId, null);
   }
 
-  SetUserRole(userId: string) {
+  setUserRole(userId: string) {
     return this.http.put(this.rootUrl + '/api/give-user/?userId=' + userId, null);
   }
 

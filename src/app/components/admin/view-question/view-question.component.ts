@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Area } from 'src/app/models/area';
 import { TestService } from 'src/app/services/test.service';
-import { NewQuestionInfo } from 'src/app/models/newQuestionModel';
 import { ToastrService } from 'ngx-toastr';
 import { Answer } from 'src/app/models/answer';
-import { element } from '@angular/core/src/render3';
+import { Router } from '@angular/router';
+import { QuestionInfo } from 'src/app/models/QuestionInfo';
 
 @Component({
   selector: 'app-view-question',
@@ -20,154 +20,193 @@ export class ViewQuestionComponent implements OnInit {
   removeAnswersIndexs: number [] = [];
   images: File [] = [];
   imagesUrl: any [] = [];
-  info: NewQuestionInfo = new NewQuestionInfo();
+  info: QuestionInfo = new QuestionInfo();
+  Qtype = 'radio';
 
-  constructor( private testService: TestService, private toastr: ToastrService) { }
+  constructor(private router: Router, private testService: TestService, private toastr: ToastrService) { }
 
-  ngOnInit() {
-      this.info.Text = 'Hello there! 2+2 is what?';
-      this.info.AreaId = -1;
-      this.testService.getTestAreaById(localStorage.ViewTestId).subscribe( (areas) => {
-      this.testAreas = areas;
-      this.areaSelect = 0;
-      });
-      this.answers =  [{Text: 'Default', Correct: false }];
-  }
-
-  QTypeChange(type: number) {
-    if ( type === 1) {
-      this.info.QuestionType = 'radio';
-    }
-    if ( type === 2) {
-      this.info.QuestionType = 'check';
-    }
-  }
-
-  AddAnswerClick() {
-    const asw = new Answer();
-    asw.Text = 'Default';
-    asw.Correct = false;
-    this.answers.push(asw);
-  }
-
-  onChangeCorrect(index: number) {
-      this.answers.forEach( e => e.Correct = false);
-      this.answers[index].Correct = true;
-  }
-
-  OnDeleteAnswers(index: number) {
-    if (this.removeAnswersIndexs.includes(index)) {
-      this.removeAnswersIndexs.splice(this.removeAnswersIndexs.indexOf(index), 1);
-    } else {
-      this.removeAnswersIndexs.push( index );
-    }
-  }
-
-  RemoveAnswersClick() {
-    const temp =  [];
-    for (let i = 0; i < this.answers.length; i++) {
-       if (!this.removeAnswersIndexs.includes(i)) {
-         temp.push(this.answers[i]);
-       }
-    }
-    this.removeAnswersIndexs = [];
-    this.answers =  temp;
-  }
-
-  onFileAdded($event) {
-    console.log('Loader!')
-    let files = $event.target.files;
-    console.log($event.target.files );
-    if (files !== undefined) {
-// tslint:disable-next-line: prefer-for-of
-       for (let i = 0; i < files.length; i++) {
-                if ( files[i].type === 'image/jpeg' || files[i].type === 'image/png' ) {
-                  this.images.push(files[i]);
-                  this.Files += files[i].name + '; ';
-                  console.log(files[i]);
-            } else {
-              this.toastr.info('Files should be images 50x50px or 200x200px..');
-              this.toastr.error('Inappropriate file!');
-            }
-        }
-       console.log(this.images);
-       this.images.forEach(image => {
-       let reader = new FileReader();
-       reader.readAsDataURL(image);
-       reader.onload = (event) => {
-        // console.log(reader.result);
-         this.imagesUrl.push(reader.result);
-          };
-      });
-    }
-  }
-
-  UpdateImagesText() {
-    this.Files = '';
-    this.images.forEach(img => {
-      this.Files += img.name + '; ';
+ngOnInit() {
+    this.info.Text = 'Hello there! 2+2 is what?';
+    this.info.AreaId = -1;
+    this.info.Id = -1;
+    this.info.TestId = localStorage.ViewTestId;
+    this.testService.getTestAreaById(localStorage.ViewTestId).subscribe( (areas) => {
+    this.testAreas = areas;
+    this.areaSelect = 0;
     });
+    this.answers =  [{Text: 'Default', Correct: false }];
+}
+
+Logout() {
+  localStorage.removeItem('userToken');
+  this.router.navigate(['/login']);
+}
+
+qTypeChange(type: number) {
+  if ( type === 1) {
+    this.Qtype = 'radio';
   }
-
-  RemoveImage(index: number) {
-    this.images.splice(this.images.indexOf(this.images[index]), 1);
-    this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
-    this.UpdateImagesText();
+  if ( type === 2) {
+    this.Qtype = 'check';
   }
+  this.answers.forEach( e => e.Correct = false);
+}
 
-  UploadClick() {
-    if (this.questionExists) {
+addAnswerClick() {
+  const asw = new Answer();
+  asw.Text = 'Default';
+  asw.Correct = false;
+  this.answers.push(asw);
+}
 
-    } else {
-      this.toastr.info('Question is new. Save question first!');
+onChangeCorrect(index: number) {
+  if (this.Qtype === 'radio') {
+    this.answers.forEach( e => e.Correct = false);
+    this.answers[index].Correct = true;
+  } else {
+    this.answers[index].Correct = true;
+  }
+}
+
+onDeleteAnswers(index: number) {
+  if (this.removeAnswersIndexs.includes(index)) {
+    this.removeAnswersIndexs.splice(this.removeAnswersIndexs.indexOf(index), 1);
+  } else {
+    this.removeAnswersIndexs.push( index );
+  }
+}
+
+removeAnswersClick() {
+  const temp = [];
+  for (let i = 0; i < this.answers.length; i++) {
+    if (!this.removeAnswersIndexs.includes(i)) {
+      temp.push(this.answers[i]);
     }
   }
+  this.removeAnswersIndexs = [];
+  this.answers = temp;
+}
 
-  CheckAnswers() {
-    let correct = false;
-    if ( this.answers.length > 1 ) {
-      this.answers.forEach( a => {
-        if ( a.Correct ) {
-          correct = true;
-         }
-      });
-    }
-    return correct;
-  }
-// Navigation
 
-DoneQclick() {
-    if ( this.areaSelect === undefined) {
-     this.toastr.info('Please select test area for the question');
-    } else {
-      if ( this.CheckAnswers() ) {
-        if( this.info.QuestionType !== undefined) {
-          this.info.AreaId = this.testAreas[this.areaSelect].TestAreaId;
-          console.log(this.testAreas[this.areaSelect].TestAreaId);
-          this.questionExists = true;
-        } else {
-          this.toastr.info('Please select question type');
-        }
+onFileAdded($event) {
+  console.log('Loader!');
+  let files = $event.target.files;
+  console.log(files);
+  if (files !== undefined) {
+    // tslint:disable-next-line: prefer-for-of
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].type === 'image/jpeg' || files[i].type === 'image/png') {
+        this.images.push(files[i]);
+        this.Files += files[i].name + '; ';
       } else {
-        this.toastr.info('Should be at least 2 answers and one correct option');
+        this.toastr.info('Files should be images 50x50px or 200x200px..');
+        this.toastr.error('Inappropriate file!');
       }
     }
+    console.log('Images:' + this.images);
+  }
+  this.images.forEach(img => {
+    this.viewImages(img);
+    this.imagesUrl = [];
+  });
+  $event.target.value = null;
+}
+
+viewImages(img) {
+  const self = this;
+  let reader = new FileReader();
+  reader.onload = (e) => {
+  self.imagesUrl.push((e.target as FileReader).result);
+  reader = new FileReader();
+};
+  reader.readAsDataURL(img);
+}
+
+updateImagesText() {
+  this.Files = '';
+  this.images.forEach(img => {
+    this.Files += img.name + '; ';
+  });
+}
+
+removeImage(index: number) {
+  this.images.splice(this.images.indexOf(this.images[index]), 1);
+  this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
+  this.updateImagesText();
+}
+
+uploadClick() {
+  if (this.questionExists) {
+
+  } else {
+    this.toastr.info('Question is new. Save question first!');
+  }
+}
+
+checkAnswers() {
+  let correct = false;
+  if ( this.answers.length > 1 ) {
+    this.answers.forEach( a => {
+      if ( a.Correct ) {
+        correct = true;
+        }
+    });
+  }
+  return correct;
+}
+// Navigation
+
+doneQclick() {
+  if (this.areaSelect === undefined) {
+    return this.toastr.info('Please select test area for the question');
   }
 
-  CancelQclick() {
-    this.ngOnInit();
+  if (!this.checkAnswers()) {
+    return this.toastr.info('Should be at least 2 answers and one correct option');
   }
 
-  NextQclick() {
+  if (this.Qtype === undefined) {
+    return this.toastr.info('Please select question type');
+  }
+
+  if (this.questionExists) {
 
   }
 
-  LastQclick() {
 
-  }
+  this.info.QuestionType = this.Qtype;
+  this.info.AreaId = this.testAreas[this.areaSelect].TestAreaId;
+  this.testService.addNewTestQuestion(this.info).subscribe( (questionId: any) => {
+    console.log(questionId);
+    this.questionExists = true;
+    this.testService.addAnswersToQuestion(questionId, this.answers).subscribe ( (success) => {
+    });
 
-  PreviousQclick() {
+    
+    this.toastr.success('Question was created succesfully!');
+  });
 
-  }
+}
+
+cancelQclick() {
+  this.ngOnInit();
+}
+
+nextQclick() {
+  window.URL.createObjectURL(this.images[0]);
+  this.router.navigate(['/question-view']);
+}
+
+lastQclick() {
+  this.router.navigate(['/question-view']);
+}
+
+previousQclick() {
+  this.router.navigate(['/question-view']);
+}
+
+firstQclick() {
+  this.router.navigate(['/question-view']);
+}
 
 }
