@@ -8,13 +8,14 @@ import { UserModel } from '../models/userModel';
 import { Area } from '../models/area';
 import { QuestionInfo } from '../models/QuestionInfo';
 import { Answer } from '../models/answer';
+import { ImageInfo } from '../models/ImageInfo';
 
 
 @Injectable({
   providedIn: 'root'
 })
 
-
+/* tslint:disable */
 export class TestService {
   constructor(private http: HttpClient) {
     console.log('Data service connected...');
@@ -35,7 +36,7 @@ export class TestService {
   }
 
   getAllUsers(): Observable<UserModel[]> {
-    return this.http.get<UserModel[]>(`${this.APIurl}api/users`);
+    return this.http.get<UserModel[]>(`${this.APIurl}/api/users`);
   }
 
   getTestInfoById(testId: number): Observable<Test> {
@@ -47,7 +48,7 @@ export class TestService {
   }
 
   getTestQuestionsById(testId: number): Observable<QuestionInfo[]> {
-    return this.http.get<QuestionInfo[]>(`${this.APIurl}'/api/tests/questions/` + testId );
+    return this.http.get<QuestionInfo[]>(`${this.APIurl}/api/tests/questions/` + testId );
   }
 
   addNewTestQuestion(info: QuestionInfo) {
@@ -63,8 +64,31 @@ export class TestService {
   }
 
   addImagesToQuestion(questionId, images: File []) {
-    const body = { images, questionId };
+    const endpoint = `${this.APIurl}/api/question/images/`;
+    const formData = new FormData();
 
-    return this.http.post(`${this.APIurl}/api/question/images/`, body);
+	images.forEach(img => {
+		formData.append('uploadedFiles',  img, img.name);
+	});
+
+    return this.http.post(`${this.APIurl}/api/question/images/${questionId}`, formData);
+  }
+
+  getQuestionImages(questionId: number): Observable<ImageInfo[]> {
+    return this.http.get<ImageInfo[]>(`${this.APIurl}/api/question/get-images/` + questionId );
+  }
+
+  getQuestionInfoById(questionId: number): Observable<QuestionInfo> {
+	return this.http.get<QuestionInfo>(`${this.APIurl}/api/question/` + questionId );
+  }
+
+  getQuestionAnswersById(questionId: number): Observable<Answer[]> {
+	return this.http.get<Answer[]>(`${this.APIurl}/api/question/answers/` + questionId );
+  }
+
+  updateTestQuestion(info: QuestionInfo) {
+	const body = {Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId, QuestionId: info.QuestionId };
+
+    return this.http.put(`${this.APIurl}/api/tests/update-questions/`, body);
   }
 }

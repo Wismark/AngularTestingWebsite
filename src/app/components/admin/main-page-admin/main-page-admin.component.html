@@ -48,9 +48,9 @@
     <div class = "row d-flex " *ngIf="userService.roleMatch(['SuperAdmin'])">
         <div class="col">
         <h4>Users status:</h4>  
-            <select [(ngModel)]="userForRole" size="7" style="width:300px">
+            <select [(ngModel)]="userForRole" size="7" style="width:350px">
               <option *ngFor="let user of allUsers" [value]="user.UserId" >
-                {{user.FirstName}} {{user.LastName}} / {{user.Login}} | Role: {{user.Role}}
+                {{user.FirstName}} {{user.LastName}} - {{user.Login}} | Role: {{user.Role}}
               </option>
             </select>
             <div class="d-flex flex-row"> 

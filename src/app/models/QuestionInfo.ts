@@ -1,5 +1,5 @@
 export class QuestionInfo {
-    public Id: number;
+    public QuestionId: number;
     public Text: string;
     public Area: string;
     public AreaId: number;
