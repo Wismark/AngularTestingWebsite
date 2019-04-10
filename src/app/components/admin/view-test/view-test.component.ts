@@ -19,6 +19,7 @@ export class ViewTestComponent implements OnInit {
 	removeQuestionsIndexs: number[] = [];
 	testInfo: Test = new Test();
 	questions: QuestionInfo[];
+	oldTest: Test[] = [];
 	active = false;
 	Title = 'Test view';
 	constructor(private router: Router, private testService: TestService, private toastr: ToastrService) { }
@@ -37,7 +38,7 @@ export class ViewTestComponent implements OnInit {
 		});
 	}
 
-	OnDeleteAreas(index: number) {
+	onDeleteAreas(index: number) {
 		if (this.removeAreaIndexs.includes(index)) {
 			this.removeAreaIndexs.splice(this.removeAreaIndexs.indexOf(index), 1);
 		} else {
@@ -45,7 +46,7 @@ export class ViewTestComponent implements OnInit {
 		}
 	}
 
-	OnDeleteQuestions(index: number) {
+	onDeleteQuestions(index: number) {
 		if (this.removeQuestionsIndexs.includes(index)) {
 			this.removeQuestionsIndexs.splice(this.removeQuestionsIndexs.indexOf(index), 1);
 		} else {
@@ -53,17 +54,17 @@ export class ViewTestComponent implements OnInit {
 		}
 	}
 
-	Logout() {
+	logout() {
 		localStorage.removeItem('userToken');
 		this.router.navigate(['/login']);
 	}
 
-	StateChange() {
+	stateChange() {
 		this.unsaved = true;
 	}
 
-	RemoveAreasClick() {
-		this.StateChange();
+	semoveAreasClick() {
+		this.stateChange();
 		const temp = [];
 		for (let i = 0; i < this.areas.length; i++) {
 			if (!this.removeAreaIndexs.includes(i)) {
@@ -74,15 +75,16 @@ export class ViewTestComponent implements OnInit {
 		this.areas = temp;
 	}
 
-	AddAreaClick() {
+	sddAreaClick() {
 		const area = new Area();
 		area.AreaName = 'Undefined area';
 		area.TestAreaId = -1;
 		this.areas.push(area);
 	}
 
-	RemoveQuestionClick() {
-		this.StateChange();
+	removeQuestionClick() {
+		this.stateChange();
+		console.log
 		const temp = [];
 		for (let i = 0; i < this.questions.length; i++) {
 			if (!this.removeQuestionsIndexs.includes(i)) {
@@ -90,13 +92,14 @@ export class ViewTestComponent implements OnInit {
 			}
 		}
 		this.removeQuestionsIndexs = [];
-		this.areas = temp;
+		this.questions = temp;
+		console.log(this.questions);
 	}
 
-	AddNewQuestionClick() {
+	addNewQuestionClick() {
 		if (this.unsaved) {
 			if (confirm('There\'s unsaved changes, would you like to save them?')) {
-				this.SaveChanges();
+				this.saveChanges();
 			} else {
 				this.router.navigate(['/question-view']);
 			}
@@ -104,14 +107,24 @@ export class ViewTestComponent implements OnInit {
 		this.router.navigate(['/question-view']);
 	}
 
-	SaveChanges() {
+	saveChanges() {
 		// ...
-		this.toastr.success('Changes successfully saved');
+		this.testService.updateQuestions(this.testInfo.TestId, this.questions).subscribe(() => {
+			this.toastr.success('Changes successfully saved');
+		});
 		this.unsaved = false;
+	}
+
+	cancelChanges(){
+		this.unsaved = false;
+		this.ngOnInit();
 	}
 
 	editQuestion(index) {
 		localStorage.ViewQuestionId = this.questions[index].QuestionId;
+		localStorage.QuestionIndex = index;
+		localStorage.setItem("Questions", JSON.stringify(this.questions));
+		console.log('index='+localStorage.QuestionIndex);
 		this.router.navigate(['/question-view']);
 	}
 }

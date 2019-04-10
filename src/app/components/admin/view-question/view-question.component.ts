@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Answer } from 'src/app/models/answer';
 import { Router } from '@angular/router';
 import { QuestionInfo } from 'src/app/models/QuestionInfo';
-import {DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ImageInfo } from 'src/app/models/ImageInfo';
 
 /* tslint:disable */
@@ -27,7 +27,6 @@ export class ViewQuestionComponent implements OnInit {
 	imagesInfos: ImageInfo[] = [];
 	Qtype = 'radio';
 	questionID: number;
-
 	info: QuestionInfo = new QuestionInfo();
 
 	constructor(private router: Router, private testService: TestService, private toastr: ToastrService, private _DomSanitizationService: DomSanitizer) { }
@@ -35,23 +34,22 @@ export class ViewQuestionComponent implements OnInit {
 	ngOnInit() {
 
 		if (localStorage.ViewQuestionId !== undefined) {
+			console.log('Init');
 			this.questionID = localStorage.ViewQuestionId;
 			this.questionExists = true;
 			this.title = 'Question edit';
 
 			this.testService.getQuestionInfoById(this.questionID).subscribe( (info) => {
-				this.info = info;
-				this.info.QuestionId = this.questionID;
-				this.Qtype = this.info.QuestionType;
+					this.info = info;
+					this.info.QuestionId = this.questionID;
+					this.Qtype = this.info.QuestionType;
 
-				this.testService.getTestAreaById(localStorage.ViewTestId).subscribe((areas) => {
-				this.testAreas = areas;								
-				this.areaSelect = this.testAreas.findIndex( (element) => {
-					return element.TestAreaId == this.info.AreaId;
-				})
-			});
-
-				
+					this.testService.getTestAreaById(localStorage.ViewTestId).subscribe((areas) => {
+					this.testAreas = areas;								
+					this.areaSelect = this.testAreas.findIndex( (element) => {
+						return element.TestAreaId == this.info.AreaId;
+					})
+				});				
 			});
 
 			this.testService.getQuestionAnswersById(this.questionID).subscribe( (answers) => {
@@ -60,13 +58,14 @@ export class ViewQuestionComponent implements OnInit {
 
 			this.testService.getQuestionImages(this.questionID).subscribe( (imageInfo) => {
 				this.imagesInfos = imageInfo;
+				this.imagesUrl = [];
 				this.imagesInfos.forEach( (info) => {
 					this.imagesUrl.push(info.ImageUrl);
 				})
 			});
 			
 		} else {
-			this.info.Text = 'Hello there! 2+2 is what?';
+			this.info.Text = 'Default question?';
 			this.info.AreaId = -1;
 			this.info.QuestionId = -1;
 			this.info.TestId = localStorage.ViewTestId;
@@ -97,7 +96,7 @@ export class ViewQuestionComponent implements OnInit {
 		}	
 		this.answers.forEach(e => e.Correct = false);
 	}
-
+	//#region Answers
 	addAnswerClick() {
 		const asw = new Answer();
 		asw.Text = 'Default';
@@ -132,18 +131,19 @@ export class ViewQuestionComponent implements OnInit {
 		this.removeAnswersIndexs = [];
 		this.answers = temp;
 	}
+	//#endregion
 
+	//#region Images
 
 	onFileAdded($event) {
 		console.log('Loader!');
 		const files = $event.target.files;
 		console.log(files);
 		if (files !== undefined) {
-			this.Files +='Unsaved images: '
-			// tslint:disable-next-line: prefer-for-of
 			for (let i = 0; i < files.length; i++) {
 				if (files[i].type === 'image/jpeg' || files[i].type === 'image/png') {
 					this.images.push(files[i]);
+					this.viewImages(files[i]);
 					this.Files += files[i].name + '; ';
 				} else {
 					this.toastr.info('Files should be images 50x50px or 200x200px..');
@@ -152,10 +152,6 @@ export class ViewQuestionComponent implements OnInit {
 			}
 			console.log('Images:' + this.images);
 		}
-		this.images.forEach(img => {
-			this.viewImages(img);
-			//this.imagesUrl = [];
-		});
 		$event.target.value = null;
 	}
 
@@ -176,17 +172,43 @@ export class ViewQuestionComponent implements OnInit {
 		});
 	}
 
-	removeImage(index: number) {
-		this.images.splice(this.images.indexOf(this.images[index]), 1);
-		this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
-		this.updateImagesText();
+	removeImages(index: number) {
+		if (!this.questionExists) {
+			this.images.splice(this.images.indexOf(this.images[index]), 1);
+			this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
+			this.updateImagesText();
+		} else {
+			if( this.images.length > 0) {
+				if(index > this.imagesInfos.length) {	
+					this.images.splice(this.images.indexOf(this.images[index-this.imagesInfos.length]), 1);
+					this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
+				} else {
+					this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
+					this.imagesInfos.splice(this.imagesInfos.indexOf(this.imagesInfos[index]), 1);
+				}
+			} else {
+				this.imagesUrl.splice(this.imagesUrl.indexOf(this.imagesUrl[index]), 1);
+				this.imagesInfos.splice(this.imagesInfos.indexOf(this.imagesInfos[index]), 1);
+			}
+		}		
+		console.log('info=' + this.imagesInfos);
+		console.log('url=' + this.imagesUrl);
 	}
 
-	uploadClick() {
+	uploadImagesClick() {
 		if (this.questionExists) {
 			if(this.images.length>0 ) {
 				this.testService.addImagesToQuestion(this.questionID, this.images).subscribe(() => {
+					this.testService.getQuestionImages(this.questionID).subscribe( (imageInfo) => {
+						this.imagesInfos = imageInfo;
+						this.imagesUrl = [];
+						this.imagesInfos.forEach( (info) => {
+							this.imagesUrl.push(info.ImageUrl);
+						})
+					});	
 				});
+				this.images = [];
+				this.Files = '';
 				this.toastr.success('New images were uploaded!');
 			} else {
 				this.toastr.info('There\'s no images to load!');
@@ -207,9 +229,11 @@ export class ViewQuestionComponent implements OnInit {
 		}
 		return correct;
 	}
-	// Navigation
+	//#endregion
 
-	doneQclick() {
+	//#region Bottom menu
+
+	doneQclick() { // debugger;
 		if (this.areaSelect === undefined) {
 			return this.toastr.info('Please select test area for the question');
 		}
@@ -226,9 +250,29 @@ export class ViewQuestionComponent implements OnInit {
 			this.testService.updateTestQuestion(this.info).subscribe(() => {
 			});
 
+			this.testService.addAnswersToQuestion(this.info.QuestionId, this.answers).subscribe(() => {
+			});
+			
+			if(this.images.length > 0) {
+					this.testService.addImagesToQuestion(this.info.QuestionId, this.images).subscribe(() => {
+				});
+				this.Files = '';
+			}
+			
+			this.testService.updateQuestionImages(this.info.QuestionId, this.imagesInfos).subscribe(() => {
+				this.images = [];
+
+				this.testService.getQuestionImages(this.questionID).subscribe( (imageInfo) => {
+					this.imagesInfos = imageInfo;
+					this.imagesUrl = [];
+					this.imagesInfos.forEach( (info) => {
+						this.imagesUrl.push(info.ImageUrl);
+					})
+				});	
+			});
+
 			return this.toastr.success('Question was updated!'); 
 		}
-
 
 		this.info.QuestionType = this.Qtype;
 		this.info.AreaId = this.testAreas[this.areaSelect].TestAreaId;
@@ -250,20 +294,42 @@ export class ViewQuestionComponent implements OnInit {
 	}
 
 	nextQclick() {
-		window.URL.createObjectURL(this.images[0]);
-		this.router.navigate(['/question-view']);
+		let index = localStorage.QuestionIndex;
+		let questions = JSON.parse(localStorage.Questions);
+		console.log('index=' + 	index);
+		if(index < questions.length-1) {
+			index++;
+			localStorage.ViewQuestionId = questions[index].QuestionId;
+			localStorage.QuestionIndex = index;
+			this.ngOnInit();	
+		}
 	}
 
 	lastQclick() {
-		this.router.navigate(['/question-view']);
+		let questions = JSON.parse(localStorage.Questions);
+		let index = questions.length-1;
+		localStorage.ViewQuestionId = questions[index].QuestionId;
+		localStorage.QuestionIndex = questions.length;
+		this.ngOnInit();
 	}
 
 	previousQclick() {
-		this.router.navigate(['/question-view']);
+		let index = localStorage.QuestionIndex;
+		let questions = JSON.parse(localStorage.Questions);
+		console.log('index=' + 	index);
+		if(index > 0) {
+			index--;
+			localStorage.ViewQuestionId = questions[index].QuestionId;
+			localStorage.QuestionIndex = index;
+			this.ngOnInit();	
+		}
 	}
 
-	firstQclick() {
-		this.router.navigate(['/question-view']);
+	firstQclick() {	
+		let questions = JSON.parse(localStorage.Questions);
+		localStorage.ViewQuestionId = questions[0].QuestionId;
+		localStorage.QuestionIndex = 0;
+		this.ngOnInit();	
 	}
-
+	//#endregion
 }

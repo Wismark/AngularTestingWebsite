@@ -91,4 +91,16 @@ export class TestService {
 
     return this.http.put(`${this.APIurl}/api/tests/update-questions/`, body);
   }
+
+  updateQuestionImages(QuestionId, imagesInfos) {
+    const body = {questionId: QuestionId, ImageInfos:imagesInfos };
+  
+      return this.http.put(`${this.APIurl}/api/question/update-images/`, body);
+    }
+
+    updateQuestions(testId: number, questions: QuestionInfo []) {
+      const body = { testId, questions };
+  
+      return this.http.post(`${this.APIurl}/api/test/update-question/`, body);
+    }
 }

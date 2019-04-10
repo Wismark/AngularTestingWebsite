@@ -1,11 +1,10 @@
 <div class="container" style="width: 950px">
-
       <div class="d-flex justify-content-center mt-2">
           <button (click)="onClickLogout()" class="btn btn-primary"> Logout </button>
           <button (click)="onClickBack()" class="btn btn-primary ml-3"> Back </button>
       </div>
         <hr>
-        <h3>{{Title}}</h3>
+        <h3>{{title}}</h3>
         <hr>
       <div class="d-flex flex-column ">
           <h5>Question text:</h5>
@@ -41,9 +40,9 @@
           <h5>Answers:</h5>
           <table class="table table-bordered"> <!-- TODO: Style  -->
             <thead>
-                <th style="width: 170px">Text</th>
+                <th style="width: 60%">Text</th>
                 <th style="width: 80px">Correct</th>
-                <th>Delete</th>
+                <th style="width: 15%" >Delete</th>
             </thead>
             <tr *ngFor="let answer of answers; let i = index">
                 <td>
@@ -59,8 +58,8 @@
                         </label>
                     </div>
                 </td>
-                <td>
-                        <label class="form-check-label mt-3">
+                <td >
+                        <label class="form-check-label mt-3" >
                                 <input type="checkbox"  (click)="onDeleteAnswers(i)" />
                                 Delete
                         </label>
@@ -79,7 +78,7 @@
         <img [src]='_DomSanitizationService.bypassSecurityTrustUrl(imagesUrl[i])' height="150" width="200"/> 
         <!-- *ngIf="imagesUrl[i]" -->
           <div class="col">
-            <button class="btn btn-primary ml-1 mt-5" (click)="removeImage(i)">Delete</button> 
+            <button class="btn btn-primary ml-1 mt-5" (click)="removeImages(i)">Delete</button> 
          </div>
       </div>
       <br/>
@@ -87,7 +86,7 @@
         <input type="text" class="text mr-2" style="width:600px"  [(ngModel)]='Files'>
         <button class="btn btn-primary ml-3" (click)="uploader.click()">Browse</button>
         <input  type="file"  #uploader  style="display: none"  (change)="onFileAdded($event)" value='null' accept="image/*" multiple/>
-        <button class="btn btn-primary ml-3" (click)="uploadClick()">Upload</button>
+        <button class="btn btn-primary ml-3" (click)="uploadImagesClick()">Upload</button>
       </div>
 
       <hr>
