@@ -43,7 +43,6 @@ export class ViewQuestionComponent implements OnInit {
 					this.info = info;
 					this.info.QuestionId = this.questionID;
 					this.Qtype = this.info.QuestionType;
-
 					this.testService.getTestAreaById(localStorage.ViewTestId).subscribe((areas) => {
 					this.testAreas = areas;								
 					this.areaSelect = this.testAreas.findIndex( (element) => {
@@ -138,7 +137,6 @@ export class ViewQuestionComponent implements OnInit {
 	onFileAdded($event) {
 		console.log('Loader!');
 		const files = $event.target.files;
-		console.log(files);
 		if (files !== undefined) {
 			for (let i = 0; i < files.length; i++) {
 				if (files[i].type === 'image/jpeg' || files[i].type === 'image/png') {
@@ -150,7 +148,6 @@ export class ViewQuestionComponent implements OnInit {
 					this.toastr.error('Inappropriate file!');
 				}
 			}
-			console.log('Images:' + this.images);
 		}
 		$event.target.value = null;
 	}
@@ -191,8 +188,6 @@ export class ViewQuestionComponent implements OnInit {
 				this.imagesInfos.splice(this.imagesInfos.indexOf(this.imagesInfos[index]), 1);
 			}
 		}		
-		console.log('info=' + this.imagesInfos);
-		console.log('url=' + this.imagesUrl);
 	}
 
 	uploadImagesClick() {
@@ -200,6 +195,7 @@ export class ViewQuestionComponent implements OnInit {
 			if(this.images.length>0 ) {
 				this.testService.addImagesToQuestion(this.questionID, this.images).subscribe(() => {
 					this.testService.getQuestionImages(this.questionID).subscribe( (imageInfo) => {
+						this.images = [];
 						this.imagesInfos = imageInfo;
 						this.imagesUrl = [];
 						this.imagesInfos.forEach( (info) => {
@@ -207,7 +203,6 @@ export class ViewQuestionComponent implements OnInit {
 						})
 					});	
 				});
-				this.images = [];
 				this.Files = '';
 				this.toastr.success('New images were uploaded!');
 			} else {
@@ -247,29 +242,27 @@ export class ViewQuestionComponent implements OnInit {
 		}
 
 		if (this.questionExists) {
+			this.info.QuestionId = this.questionID;
 			this.testService.updateTestQuestion(this.info).subscribe(() => {
-			});
-
+			});			
 			this.testService.addAnswersToQuestion(this.info.QuestionId, this.answers).subscribe(() => {
 			});
 			
 			if(this.images.length > 0) {
 					this.testService.addImagesToQuestion(this.info.QuestionId, this.images).subscribe(() => {
+						this.images = [];
+						this.testService.updateQuestionImages(this.info.QuestionId, this.imagesInfos).subscribe(() => {			
+							this.testService.getQuestionImages(this.questionID).subscribe( (imageInfo) => {
+								this.imagesInfos = imageInfo;
+								this.imagesUrl = [];
+								this.imagesInfos.forEach( (info) => {
+									this.imagesUrl.push(info.ImageUrl);
+								})
+							});	
+						});
 				});
 				this.Files = '';
 			}
-			
-			this.testService.updateQuestionImages(this.info.QuestionId, this.imagesInfos).subscribe(() => {
-				this.images = [];
-
-				this.testService.getQuestionImages(this.questionID).subscribe( (imageInfo) => {
-					this.imagesInfos = imageInfo;
-					this.imagesUrl = [];
-					this.imagesInfos.forEach( (info) => {
-						this.imagesUrl.push(info.ImageUrl);
-					})
-				});	
-			});
 
 			return this.toastr.success('Question was updated!'); 
 		}
@@ -277,10 +270,11 @@ export class ViewQuestionComponent implements OnInit {
 		this.info.QuestionType = this.Qtype;
 		this.info.AreaId = this.testAreas[this.areaSelect].TestAreaId;
 		this.testService.addNewTestQuestion(this.info).subscribe((questionId: any) => {
-			console.log(questionId);
 			this.testService.addAnswersToQuestion(questionId, this.answers).subscribe(() => {
 			});
 			this.testService.addImagesToQuestion(questionId, this.images).subscribe(() => {
+				this.images = [];
+				this.Files = '';
 			});
 			this.questionID = questionId;
 			this.questionExists = true;
@@ -296,7 +290,8 @@ export class ViewQuestionComponent implements OnInit {
 	nextQclick() {
 		let index = localStorage.QuestionIndex;
 		let questions = JSON.parse(localStorage.Questions);
-		console.log('index=' + 	index);
+		console.log(index);
+		console.log(questions);
 		if(index < questions.length-1) {
 			index++;
 			localStorage.ViewQuestionId = questions[index].QuestionId;
@@ -309,14 +304,15 @@ export class ViewQuestionComponent implements OnInit {
 		let questions = JSON.parse(localStorage.Questions);
 		let index = questions.length-1;
 		localStorage.ViewQuestionId = questions[index].QuestionId;
-		localStorage.QuestionIndex = questions.length;
+		localStorage.QuestionIndex = questions.length; 
 		this.ngOnInit();
 	}
 
 	previousQclick() {
 		let index = localStorage.QuestionIndex;
 		let questions = JSON.parse(localStorage.Questions);
-		console.log('index=' + 	index);
+		console.log(index);
+		console.log(questions);
 		if(index > 0) {
 			index--;
 			localStorage.ViewQuestionId = questions[index].QuestionId;

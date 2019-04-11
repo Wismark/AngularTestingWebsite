@@ -9,6 +9,7 @@ import { Area } from '../models/area';
 import { QuestionInfo } from '../models/QuestionInfo';
 import { Answer } from '../models/answer';
 import { ImageInfo } from '../models/ImageInfo';
+import { AreaDeleteInfo } from '../models/areaDeleteInfo';
 
 
 @Injectable({
@@ -102,5 +103,20 @@ export class TestService {
       const body = { testId, questions };
   
       return this.http.post(`${this.APIurl}/api/test/update-question/`, body);
+    } //updateTestInfo
+
+    updateTestInfo(info: Test) {
+      return this.http.put(`${this.APIurl}/api/test-update/`, info);
     }
-}
+
+    updateAreas(areas: Area [], testId:number) {
+      const body = { Areas:areas, TestID:testId };
+  
+      return this.http.post(`${this.APIurl}/api/test/update-areas/`, body);
+    } 
+
+    checkAreasOnDelete(areas: Area [], testId:number): Observable<AreaDeleteInfo[]> {
+      const body = { Areas:areas, TestID:testId };
+      return this.http.post<AreaDeleteInfo[]>(`${this.APIurl}/api/test/check-areas/`, body);
+    }
+} //checkAreasOnDelete AreaDeleteInfo

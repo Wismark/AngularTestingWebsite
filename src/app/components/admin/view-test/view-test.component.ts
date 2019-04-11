@@ -6,6 +6,8 @@ import { Test } from 'src/app/models/test';
 import { element } from '@angular/core/src/render3';
 import { QuestionInfo } from 'src/app/models/QuestionInfo';
 import { ToastrService } from 'ngx-toastr';
+import { Console } from '@angular/core/src/console';
+import { AreaDeleteInfo } from 'src/app/models/areaDeleteInfo';
 /* tslint:disable */
 @Component({
 	selector: 'app-view-test',
@@ -14,31 +16,40 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ViewTestComponent implements OnInit {
 	unsaved = false;
-	areas: Area[];
+	questions_changed = false;
+	testExist: boolean;
+	areas: Area[] = [];
 	removeAreaIndexs: number[] = [];
 	removeQuestionsIndexs: number[] = [];
 	testInfo: Test = new Test();
 	questions: QuestionInfo[];
 	oldTest: Test[] = [];
+	areas_toDelete: Area [] = [];
+	areas_deleteInfo: AreaDeleteInfo [] = [];
 	active = false;
 	Title = 'Test view';
 	constructor(private router: Router, private testService: TestService, private toastr: ToastrService) { }
 
 	ngOnInit() {
-		this.testService.getTestInfoById(localStorage.ViewTestId).subscribe((test) => {
-			this.testInfo = test;
-		});
+		if(localStorage.ViewTestId !== undefined) {
+			this.testExist = true;
+			this.testService.getTestInfoById(localStorage.ViewTestId).subscribe((test) => {
+				this.testInfo = test;
+			});
 
-		this.testService.getTestAreaById(localStorage.ViewTestId).subscribe((areas) => {
-			this.areas = areas;
-		});
+			this.testService.getTestAreaById(localStorage.ViewTestId).subscribe((areas) => {
+				this.areas = areas;
+			});
 
-		this.testService.getTestQuestionsById(localStorage.ViewTestId).subscribe((questions) => {
-			this.questions = questions;
-		});
+			this.testService.getTestQuestionsById(localStorage.ViewTestId).subscribe((questions) => {
+				this.questions = questions;
+			});
+		}
+		this.Title = 'New test';
 	}
 
 	onDeleteAreas(index: number) {
+		this.stateChange();
 		if (this.removeAreaIndexs.includes(index)) {
 			this.removeAreaIndexs.splice(this.removeAreaIndexs.indexOf(index), 1);
 		} else {
@@ -47,6 +58,7 @@ export class ViewTestComponent implements OnInit {
 	}
 
 	onDeleteQuestions(index: number) {
+		this.stateChange();
 		if (this.removeQuestionsIndexs.includes(index)) {
 			this.removeQuestionsIndexs.splice(this.removeQuestionsIndexs.indexOf(index), 1);
 		} else {
@@ -59,23 +71,50 @@ export class ViewTestComponent implements OnInit {
 		this.router.navigate(['/login']);
 	}
 
+	back() {
+		localStorage.removeItem('ViewTestId');
+		this.router.navigate(['/admin']);
+	}
+
 	stateChange() {
 		this.unsaved = true;
 	}
 
-	semoveAreasClick() {
+	removeAreasClick() {
 		this.stateChange();
-		const temp = [];
+		const temp = [];  
 		for (let i = 0; i < this.areas.length; i++) {
 			if (!this.removeAreaIndexs.includes(i)) {
 				temp.push(this.areas[i]);
+			} else {
+				this.areas_toDelete.push(this.areas[i]);
 			}
 		}
-		this.removeAreaIndexs = [];
-		this.areas = temp;
+		this.testService.checkAreasOnDelete(this.areas_toDelete, this.testInfo.TestId ).subscribe((info) => {
+			this.areas_deleteInfo = info;
+			if( this.areas_deleteInfo.length > 0 ) {
+				this.toastr.toastrConfig.timeOut=10000;
+					this.areas_deleteInfo.forEach(element => {
+					this.toastr.warning('AreaName: ' + element.AreaName + ' Number of realeted questions:' + element.NumOfQuestions );
+					var area = new Area();
+					area.AreaName = element.AreaName;
+					area.TestAreaId = element.AreaId;
+					temp.push(area);
+				});
+				this.toastr.info('Can\'t delete areas! Remove related questions or change their areas first!');
+				this.toastr.toastrConfig.resetTimeoutOnDuplicate;
+				this.removeAreaIndexs = [];
+				this.areas = temp;
+			} else {
+				this.removeAreaIndexs = [];
+				this.areas = temp;
+			}		
+			this.areas_toDelete = [];	
+		});	
 	}
 
-	sddAreaClick() {
+	addAreaClick() {
+		this.stateChange();
 		const area = new Area();
 		area.AreaName = 'Undefined area';
 		area.TestAreaId = -1;
@@ -83,8 +122,11 @@ export class ViewTestComponent implements OnInit {
 	}
 
 	removeQuestionClick() {
+		if(this.removeQuestionsIndexs.length<1)	{
+			return; 
+		}
 		this.stateChange();
-		console.log
+		this.questions_changed = true;
 		const temp = [];
 		for (let i = 0; i < this.questions.length; i++) {
 			if (!this.removeQuestionsIndexs.includes(i)) {
@@ -92,39 +134,67 @@ export class ViewTestComponent implements OnInit {
 			}
 		}
 		this.removeQuestionsIndexs = [];
-		this.questions = temp;
-		console.log(this.questions);
+		this.questions = temp;	
 	}
 
 	addNewQuestionClick() {
+		console.log('1');
 		if (this.unsaved) {
 			if (confirm('There\'s unsaved changes, would you like to save them?')) {
 				this.saveChanges();
 			} else {
+				localStorage.QuestionIndex = this.questions.length-1;
 				this.router.navigate(['/question-view']);
 			}
+		} else {
+			localStorage.QuestionIndex = this.questions.length-1;
+			this.router.navigate(['/question-view']);
 		}
-		this.router.navigate(['/question-view']);
 	}
 
 	saveChanges() {
-		// ...
-		this.testService.updateQuestions(this.testInfo.TestId, this.questions).subscribe(() => {
+		if( this.unsaved ) {
+			console.log('Hey there');
+			this.testService.updateTestInfo(this.testInfo).subscribe(() => {
+				this.testService.updateAreas(this.areas,this.testInfo.TestId ).subscribe(() => {
+							if(this.questions_changed) {
+								this.testService.updateQuestions(this.testInfo.TestId, this.questions).subscribe(() => {	
+								this.questions_changed=false;
+								this.testService.getTestQuestionsById(this.testInfo.TestId).subscribe((questions) => {
+									this.questions = questions;
+								});		
+							});
+						}		
+					});					
+			});
 			this.toastr.success('Changes successfully saved');
-		});
-		this.unsaved = false;
+			return this.unsaved = false;
+		}		
+		this.toastr.info('There\'s no changes to save..');
 	}
 
 	cancelChanges(){
 		this.unsaved = false;
+		this.toastr.info('Changes were canceled!');
 		this.ngOnInit();
 	}
 
 	editQuestion(index) {
+		if (this.unsaved) {
+			if (confirm('There\'s unsaved changes, would you like to save them?')) {
+				this.saveChanges();
+			} else {
+				this.moveToTest(index);
+			}
+		}
+		this.moveToTest(index);
+	}
+
+	moveToTest(index) {
 		localStorage.ViewQuestionId = this.questions[index].QuestionId;
 		localStorage.QuestionIndex = index;
 		localStorage.setItem("Questions", JSON.stringify(this.questions));
-		console.log('index='+localStorage.QuestionIndex);
 		this.router.navigate(['/question-view']);
 	}
+
 }

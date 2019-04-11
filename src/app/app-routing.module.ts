@@ -9,11 +9,13 @@ import { UserComponent } from './_shared/authentication/user/user.component';
 import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
 import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
 import { ViewQuestionComponent } from './components/admin/view-question/view-question.component';
+import { TestProcessComponent } from './components/test-process/test-process.component';
 
 
 
 const routes: Routes = [
   {path: '', component: MainPageComponent, canActivate:[AuthGuard]},
+  {path: 'test', component: TestProcessComponent, canActivate:[AuthGuard]},
   {path: 'login', component: UserComponent},
   {path: 'register', component: RegistrationComponent},
   {path: 'admin', component: MainPageAdminComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},

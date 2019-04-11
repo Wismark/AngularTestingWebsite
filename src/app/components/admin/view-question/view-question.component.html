@@ -15,12 +15,12 @@
         <h5>Question type:</h5>
         <div class="form-check-inline ml-4">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" name='type' [checked]="info.QuestionType === 'radio'" (change)='qTypeChange(1)' >Radio
+              <input type="radio" class="form-check-input" name='type' [checked]="this.Qtype === 'radio'" (change)='qTypeChange(1)' >Radio
             </label>
         </div>
         <div class="form-check-inline">
           <label class="form-check-label">
-            <input type="radio" class="form-check-input"  name='type'  [checked]="info.QuestionType === 'check'"  (change)='qTypeChange(2)' >Check
+            <input type="radio" class="form-check-input"  name='type'  [checked]="this.Qtype === 'check'"  (change)='qTypeChange(2)' >Check
           </label>
         </div>
       </div>

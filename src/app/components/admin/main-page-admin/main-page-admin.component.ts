@@ -78,12 +78,17 @@ export class MainPageAdminComponent implements OnInit {
   }
 
 
-  EditTestSelectClick() {
+  editTestSelectClick() {
     localStorage.ViewTestId = this.testSelect;
     this.router.navigate(['/test-view']);
   }
 
-  StartTestClick() {
+  startTestClick() {
     console.log(this.testSelect);
+    this.router.navigate(['/test']);
+  }
+
+  newTest() {
+    this.router.navigate(['/test-view']);
   }
 }

@@ -21,6 +21,7 @@ import { AuthGuard } from './_shared/authentication/Guard/auth.guard';
 import { AuthInterceptor } from './_shared/authentication/auth.interceptor';
 import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
 import { ViewQuestionComponent } from './components/admin/view-question/view-question.component';
+import { TestProcessComponent } from './components/test-process/test-process.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { ViewQuestionComponent } from './components/admin/view-question/view-que
     UserComponent,
     ForbiddenComponent,
     ViewQuestionComponent,
+    TestProcessComponent,
   ],
   imports: [
     BrowserModule,
