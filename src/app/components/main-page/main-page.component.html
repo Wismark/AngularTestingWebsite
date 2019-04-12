@@ -1,18 +1,18 @@
 <div class="container">
-    <div> 
-        <button (click)="Logout()" class="btn btn-primary"> Logout </button>
+    <div class="d-flex justify-content-center mt-2"> 
+        <button (click)="logout()" class="btn btn-primary"> Logout </button>
     </div>
-  <hr>
+  <hr>  
   <div class = "row d-flex flex-column pb-2">
     <div class="col">
       <h4>Available tests:</h4>  
-      <select [(ngModel)]="testSelect" size="5">
-        <option *ngFor="let test of tests" [value]="test.Id" >
-          {{test.Name}}
+      <select [(ngModel)]="testIdSelect" size="5">
+        <option *ngFor="let test of tests" [value]="test.TestId" >
+          {{test.Name}}   / {{test.NumOfQuestions}}
         </option>
       </select>  
       <div class="d-flex justify-content-center pt-1">
-        <button class="btn btn-primary" (click)="TestSelect()" id="submit">Start</button>
+        <button class="btn btn-primary" (click)="testSelectClick()">Start</button>
       </div>
     </div>
   </div>
@@ -21,12 +21,12 @@
     <div class="col">
       <h4>Test results:</h4>  
       <select [(ngModel)]="resultSelect" size="5" style="width:240px">
-        <option *ngFor="let result of results" [value]="result.Id" >
+        <option *ngFor="let result of results; let i = index" [value]="result.Id" >
           {{result.TestName}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
         </option>
       </select>  
       <div class="d-flex justify-content-center pt-1">
-        <button class="btn btn-primary" (click)="ResultSelect()" id="submit">View</button>
+        <button class="btn btn-primary" (click)="resultSelectClick()">View</button>
       </div>
     </div>
   </div>

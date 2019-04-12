@@ -24,8 +24,12 @@ export class TestService {
 
   APIurl = 'http://localhost:50672';
 
-  getTests(): Observable<Test[]> {
-    return this.http.get<Test[]>(`${this.APIurl}/api/tests`);
+  getTests(active: boolean): Observable<Test[]> {
+    return this.http.get<Test[]>(`${this.APIurl}/api/tests/` + active);
+  }
+
+  getCurrentQuestionID(index, testId) {
+    return this.http.get(`${this.APIurl}/api/test-process/${index}/${testId}`);
   }
 
   getTestResultsByUserId(userId: string): Observable<Results[]> {

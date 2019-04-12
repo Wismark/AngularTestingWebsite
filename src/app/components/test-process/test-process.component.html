@@ -1,3 +1,48 @@
-<p>
-  test-process works!
-</p>
+<div class="container p-0" style="width:625px;">
+    <div class="d-flex justify-content-center mt-2"> 
+        <button (click)="logout()" class="btn btn-primary"> Logout </button>
+        <button (click)="goBack()" class="btn btn-primary ml-3"> Main Page </button>
+    </div>
+    <hr> 
+    <div class="d-flex flex-row ">
+        <h4 class="d-inline-flex">Test name: Some Test</h4>
+    </div>
+    <hr>
+    <h5>Question №{{questionNumber}}</h5>
+    <hr>
+    <div class="row m-0"> 
+            <label><h3>{{info.Text}}</h3></label>
+    </div>
+    <div class="row m-0"> 
+        <div  *ngFor="let image of imagesUrl; let i = index" class="d-flex flex-row d-inline-flex" >
+            <img [src]='_DomSanitizationService.bypassSecurityTrustUrl(imagesUrl[i])' class='ml-2 mt-2' height="150" width="200"/> 
+        </div>   
+    </div>
+
+    <table>  
+        <tr *ngFor="let answer of answersInfo; let i = index">
+                <td>                 
+                    <div class="form-check-inline ml-4 mt-3">
+                        <label *ngIf="info.QuestionType!=='check'" class="form-check-label">
+                          <input type="radio" class="form-check-input" name='optradio'  [checked]=" "  (change)='onAnswerChange(i)'/>
+                          {{answer.Text}}
+                        </label>
+                        <label *ngIf="info.QuestionType==='check'" class="form-check-label">
+                          <input type="checkbox" class="form-check-input" name='optradio' [checked]=" "  (change)='onAnswerChange(i)'/>
+                          {{answer.Text}}
+                        </label>
+                    </div>
+                </td>
+        </tr>
+    </table>
+     <hr>
+     <div class="d-flex justify-content-between mb-1 p-0">          
+          <button class="btn btn-primary" (click)="firstQclick()"> &laquo; First</button>
+          <button class="btn btn-primary ml-3" (click)="previousQclick()"> &lsaquo; Previous</button>
+          <button class="btn btn-success ml-3" (click)="finishTestclick()">Finish test</button>
+          <button class="btn btn-primary ml-3" (click)="lastQclick()"> Last &raquo;</button>
+          <button class="btn btn-primary ml-3" (click)="nextQclick()"> Next &rsaquo; </button>
+      </div>
+      <hr>
+      <h5>Time left: {{timer}}</h5>
+</div>

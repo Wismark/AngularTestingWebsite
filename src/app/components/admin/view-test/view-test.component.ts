@@ -95,7 +95,7 @@ export class ViewTestComponent implements OnInit {
 			if( this.areas_deleteInfo.length > 0 ) {
 				this.toastr.toastrConfig.timeOut=10000;
 					this.areas_deleteInfo.forEach(element => {
-					this.toastr.warning('AreaName: ' + element.AreaName + ' Number of realeted questions:' + element.NumOfQuestions );
+					this.toastr.warning('Name of the area: ' + element.AreaName + ' Number of realeted questions:' + element.NumOfQuestions );
 					var area = new Area();
 					area.AreaName = element.AreaName;
 					area.TestAreaId = element.AreaId;
@@ -155,7 +155,8 @@ export class ViewTestComponent implements OnInit {
 	saveChanges() {
 		if( this.unsaved ) {
 			console.log('Hey there');
-			this.testService.updateTestInfo(this.testInfo).subscribe(() => {
+			this.testService.updateTestInfo(this.testInfo).subscribe((testId:number) => {
+				this.testInfo.TestId = testId;
 				this.testService.updateAreas(this.areas,this.testInfo.TestId ).subscribe(() => {
 							if(this.questions_changed) {
 								this.testService.updateQuestions(this.testInfo.TestId, this.questions).subscribe(() => {	

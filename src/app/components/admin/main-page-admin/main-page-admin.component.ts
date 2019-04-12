@@ -26,7 +26,7 @@ export class MainPageAdminComponent implements OnInit {
   constructor(private userService: UserService, private testService: TestService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.testService.getTests().subscribe(tests => {
+    this.testService.getTests(false).subscribe(tests => {
     this.tests = tests;
     });
 

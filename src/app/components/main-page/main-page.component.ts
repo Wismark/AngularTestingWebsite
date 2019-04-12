@@ -3,6 +3,7 @@ import { Test } from 'src/app/models/test';
 import { TestService } from '../../services/test.service';
 import { Results } from 'src/app/models/result';
 import { Router } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-page',
@@ -15,15 +16,15 @@ export class MainPageComponent implements OnInit {
   userid: string;
 
   resultSelect: number;
-  testSelect: number;
+  testIdSelect: string;
 
-  constructor(private testService: TestService, private router: Router) {
-    console.log(testService.getTests());
+  constructor(private testService: TestService, private router: Router, private _DomSanitizationService: DomSanitizer) {
+  //  console.log(testService.getTests());
   }
 
   ngOnInit() {
       this.userid = '1';
-      this.testService.getTests().subscribe(tests => {
+      this.testService.getTests(true).subscribe(tests => {
       this.tests = tests;
     });
 
@@ -32,24 +33,30 @@ export class MainPageComponent implements OnInit {
     });
 
       this.resultSelect = 0;
-      this.testSelect = 0;
+      this.testIdSelect = '0';
   }
 
-  ResultSelect() {
+  resultSelectClick(index) {
     console.log('123');
     if (this.resultSelect > 0) {
 
     }
   }
 
-  TestSelect() {
-    console.log('123');
-    if (this.testSelect > 0) {
-      console.log( this.tests[this.testSelect - 1].Name );
+  testSelectClick() {
+    if (parseInt(this.testIdSelect, 10) > 0) {
+    //  console.log( this.tests[this.testIdSelect - 1].Name );
+      localStorage.TestInUseId = this.testIdSelect;
+      const index = this.tests.findIndex( (test) => test.TestId === parseInt(this.testIdSelect, 10));
+      console.log('index=' + index);
+      localStorage.CurrentIndex = 0;
+      localStorage.TestInUseCount = this.tests[index].NumOfQuestions;
+      localStorage.TestInUseTime = this.tests[index].TimeLimitation;
+      this.router.navigate(['/test']);
     }
   }
 
-  Logout() {
+  logout() {
     localStorage.removeItem('userToken');
     this.router.navigate(['/login']);
   }
