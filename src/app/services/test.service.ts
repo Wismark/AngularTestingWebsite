@@ -11,7 +11,7 @@ import { Answer } from '../models/answer';
 import { ImageInfo } from '../models/ImageInfo';
 import { AreaDeleteInfo } from '../models/areaDeleteInfo';
 import { UserAnswer } from '../models/userAnswer';
-
+import {formatDate } from '@angular/common';
 
 @Injectable({
     providedIn: 'root'
@@ -126,7 +126,9 @@ export class TestService {
     }
 
     checkUsersTestResult(answers: UserAnswer[], userId:any, testid:number) {
-        const body = { Answers: answers, UserId:userId, TestId:testid, startDate:"10/01/2019 21:10:05"};
+        let date = formatDate(new Date(), 'yyyy/MM/dd hh:mm:ss', 'en');
+        console.log(date);
+        const body = { Answers: answers, UserId:userId, TestId:testid, startDate:date};
     //    console.log(body);
         return this.http.post<UserAnswer[]>(`${this.APIurl}/api/test/check-result/`, body);
     }

@@ -40,6 +40,7 @@ export class TestProcessComponent implements OnInit {
             if( localStorage.UserAnswers[localStorage.CurrentIndex] !== undefined) {
          //       console.log(localStorage.UserAnswers[localStorage.CurrentIndex]);
                 this.userAnswer = this.userAnswers[localStorage.CurrentIndex];
+
             }             
         //    console.log(this.userAnswer + ' ' +localStorage.CurrentIndex );
         }
@@ -48,6 +49,9 @@ export class TestProcessComponent implements OnInit {
             this.userAnswer = new UserAnswer();
             if(this.userAnswer.Answers === undefined) {
                 this.userAnswer.Answers = [];
+                for(let i=0; i<this.answersInfo.length; i++) {
+                    this.userAnswer.Answers.push(false);
+                }
                 this.userAnswer.QuestionIndex = localStorage.CurrentIndex;
             }
         }
@@ -104,13 +108,14 @@ export class TestProcessComponent implements OnInit {
         if (confirm('Are you sure you want to finish test?')) {
             this.updateAnswers();
             this.userAnswers = JSON.parse(localStorage.UserAnswers);
-            console.log(localStorage.userId);
+            console.log(localStorage.userId); 
+            this.checkAnswers();
             this.testService.checkUsersTestResult(this.userAnswers, localStorage.userId, localStorage.TestInUseId).subscribe(() => {
 
             });
             //this.router.navigate(['/results']);
         }    
-        this.checkAnswers();
+       
     }
 
     previousQclick() {
@@ -147,7 +152,7 @@ export class TestProcessComponent implements OnInit {
 
     onAnswerChange(index) {
         if(this.info.QuestionType === 'radio') {
-            this.userAnswer.Answers = [];
+            this.userAnswer.Answers.forEach(a => a = false); //this.answers.forEach( a => a.Correct = false)
 			this.userAnswer.Answers[index] = true;
         } else {
             if(this.userAnswer.Answers[index]) {
@@ -179,6 +184,7 @@ export class TestProcessComponent implements OnInit {
             this.userAnswers.forEach(a=> {
             console.log('qIndex=' + a.QuestionIndex);
             a.Answers.forEach( (e,i) => {
+                if(e===null) e=false;
                 console.log(i + ' : ' + e)
                 });
             console.log('----');

@@ -105,7 +105,7 @@ export class ViewQuestionComponent implements OnInit {
 
 	onChangeCorrect(index: number) {
 		if (this.Qtype === 'radio') {
-			this.answers = [];
+			this.answers.forEach( a => a.Correct = false)
 			this.answers[index].Correct = true;
 		} else {
 			if(this.answers[index].Correct) {

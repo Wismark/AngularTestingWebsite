@@ -147,7 +147,11 @@ export class ViewTestComponent implements OnInit {
 				this.router.navigate(['/question-view']);
 			}
 		} else {
-			localStorage.QuestionIndex = this.questions.length-1;
+			if(this.questions.length !== undefined) {
+				localStorage.QuestionIndex = this.questions.length-1;
+			} else {
+				localStorage.QuestionIndex = 0;
+			}	
 			this.router.navigate(['/question-view']);
 		}
 	}
