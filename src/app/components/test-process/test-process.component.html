@@ -24,11 +24,11 @@
                 <td>                 
                     <div class="form-check-inline ml-4 mt-3">
                         <label *ngIf="info.QuestionType!=='check'" class="form-check-label">
-                          <input type="radio" class="form-check-input" name='optradio'  [checked]=" "  (change)='onAnswerChange(i)'/>
+                          <input type="radio" class="form-check-input" name='optradio'  [checked]="userAnswer.Answers[i]"  (change)='onAnswerChange(i)'/>
                           {{answer.Text}}
                         </label>
                         <label *ngIf="info.QuestionType==='check'" class="form-check-label">
-                          <input type="checkbox" class="form-check-input" name='optradio' [checked]=" "  (change)='onAnswerChange(i)'/>
+                          <input type="checkbox" class="form-check-input" name='optradio' [checked]="userAnswer.Answers[i]"  (change)='onAnswerChange(i)'/>
                           {{answer.Text}}
                         </label>
                     </div>

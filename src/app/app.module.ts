@@ -22,6 +22,7 @@ import { AuthInterceptor } from './_shared/authentication/auth.interceptor';
 import { ForbiddenComponent } from './_shared/forbidden/forbidden.component';
 import { ViewQuestionComponent } from './components/admin/view-question/view-question.component';
 import { TestProcessComponent } from './components/test-process/test-process.component';
+import { TestResultComponent } from './components/test-result/test-result.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { TestProcessComponent } from './components/test-process/test-process.com
     ForbiddenComponent,
     ViewQuestionComponent,
     TestProcessComponent,
+    TestResultComponent,
   ],
   imports: [
     BrowserModule,
