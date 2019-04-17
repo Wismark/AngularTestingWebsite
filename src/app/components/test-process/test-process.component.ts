@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { UserAnswer } from 'src/app/models/userAnswer';
+import { timer } from 'rxjs';
 /* tslint:disable */
 @Component({
   selector: 'app-test-process',
@@ -23,9 +24,28 @@ export class TestProcessComponent implements OnInit {
     timer:any;
     numOfQuestuions:number;
     userAnswer: UserAnswer;
-    userAnswers: UserAnswer [] = [];
+    userAnswers: UserAnswer [] = []; //localStorage.TestInUseTime
+    
+    constructor(private testService: TestService, private router: Router, private _DomSanitizationService: DomSanitizer,  private toastr: ToastrService) 
+    { 
+        this.timer=localStorage.TestInUseTime;
+        this.startTimer(); 
+    }
 
-    constructor(private testService: TestService, private router: Router, private _DomSanitizationService: DomSanitizer,  private toastr: ToastrService) { }
+    interval; // clearInterval(this.interval);
+
+    startTimer() {
+        this.interval = setInterval(() => {
+        if(this.timer > 0) {
+            this.timer--;
+            console.log(this.timer);
+        } else {
+            this.toastr.toastrConfig.timeOut=2000;
+            this.toastr.info('Time is up! Let\'s see results..');
+            this.finishTest();
+        }
+        },1000)
+    }
 
     ngOnInit() {
         if( localStorage.CurrentIndex === undefined) { 
@@ -33,7 +53,6 @@ export class TestProcessComponent implements OnInit {
         }
 
         this.numOfQuestuions = localStorage.TestInUseCount;
-        this.timer = localStorage.TestInUseTime;
 
         if(localStorage.UserAnswers !== undefined) {
             this.userAnswers = JSON.parse(localStorage.UserAnswers);
@@ -95,27 +114,37 @@ export class TestProcessComponent implements OnInit {
 
     goBack() {
         if (confirm('Are you sure you want to terminate test?')) {
-            localStorage.removeItem('TestInUseId');
-            localStorage.removeItem('CurrentIndex');
-            localStorage.removeItem('TestInUseCount');
-            localStorage.removeItem('TestInUseTime');
-            localStorage.removeItem('UserAnswers');
+            this.clearStorage();
             this.router.navigate(['/']);
         } 
     }
 
+    clearStorage() {
+        localStorage.removeItem('TestInUseId');
+        localStorage.removeItem('CurrentIndex');
+        localStorage.removeItem('TestInUseCount');
+        localStorage.removeItem('TestInUseTime');
+        localStorage.removeItem('UserAnswers');
+    }
+
     finishTestclick() {
         if (confirm('Are you sure you want to finish test?')) {
-            this.updateAnswers();
-            this.userAnswers = JSON.parse(localStorage.UserAnswers);
-            console.log(localStorage.userId); 
-            this.checkAnswers();
-            this.testService.checkUsersTestResult(this.userAnswers, localStorage.userId, localStorage.TestInUseId).subscribe(() => {
-
-            });
+            this.finishTest();
             //this.router.navigate(['/results']);
         }    
        
+    }
+
+    finishTest() {
+        this.updateAnswers();
+        this.userAnswers = JSON.parse(localStorage.UserAnswers);
+        console.log(localStorage.userId); 
+        this.checkAnswers();
+        this.testService.checkUsersTestResult(this.timer,this.userAnswers, localStorage.userId, localStorage.TestInUseId).subscribe((resultId) => {
+            localStorage.UserResultId = resultId;
+            this.clearStorage();
+            this.router.navigate(['/results']);
+        });
     }
 
     previousQclick() {

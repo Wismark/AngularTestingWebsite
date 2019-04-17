@@ -20,18 +20,17 @@ export class MainPageComponent implements OnInit {
     testIdSelect: string;
 
     constructor(private testService: TestService, private router: Router, private _DomSanitizationService: DomSanitizer) {
-        //  console.log(testService.getTests());
     }
 
     ngOnInit() {
         this.clearLocalStorage();
-        this.userid = '1';
+        this.userid = localStorage.userId;
         this.testService.getTests(true).subscribe(tests => {
             this.tests = tests;
         });
 
-        this.testService.getTestResultsByUserId(this.userid).subscribe(resul => {
-            this.results = resul;
+        this.testService.getTestResultsByUserId(this.userid).subscribe(results => {
+            this.results = results;
         });
 
         this.resultSelect = 0;
@@ -39,9 +38,11 @@ export class MainPageComponent implements OnInit {
     }
 
     resultSelectClick(index) {
-        console.log('123');
+        console.log('id=' + this.resultSelect);
         if (this.resultSelect > 0) {
-
+            this.clearLocalStorage();
+            localStorage.UserResultId = this.resultSelect;
+            this.router.navigate(['/results']);
         }
     }
 
@@ -54,7 +55,7 @@ export class MainPageComponent implements OnInit {
             localStorage.CurrentIndex = 0;
             const count = this.tests[index].NumOfQuestions;
             localStorage.TestInUseCount = count;
-            localStorage.TestInUseTime = this.tests[index].TimeLimitation;
+            localStorage.TestInUseTime = this.tests[index].TimeLimitation * 60;
             this.router.navigate(['/test']);
         }
     }
@@ -70,5 +71,6 @@ export class MainPageComponent implements OnInit {
         localStorage.removeItem('TestInUseCount');
         localStorage.removeItem('TestInUseTime');
         localStorage.removeItem('UserAnswers');
+        localStorage.removeItem('UserResultId');
     }
 }

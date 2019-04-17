@@ -20,8 +20,8 @@
   <div class = "row d-flex flex-column">
     <div class="col">
       <h4>Test results:</h4>  
-      <select [(ngModel)]="resultSelect" size="5" style="width:240px">
-        <option *ngFor="let result of results; let i = index" [value]="result.Id" >
+      <select [(ngModel)]="resultSelect" size="8"  class='testResult'>
+        <option *ngFor="let result of results; let i = index" [value]="result.TestResultId" >
           {{result.TestName}} / {{result.FinishDate | date:'dd:MM:yyyy H:mm'}}
         </option>
       </select>  

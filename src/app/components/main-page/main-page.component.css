@@ -1,4 +1,9 @@
 select{
-    width: 200px;
-    height: 100px;
+    width: 250px;
+    height: 150px;
+}
+
+.testResult{
+    width: 260px !important;
+    height: 200px !important;;
 }
