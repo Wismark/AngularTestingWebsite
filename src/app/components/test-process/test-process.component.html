@@ -47,7 +47,7 @@
           <button class="btn btn-primary ml-3" (click)="nextQclick()"> Next &rsaquo; </button>
       </div>
       <hr>
-      <h5>Time left: {{(timer/60 |number:'2.0-0')}}  min {{timer%60}} sec</h5>
+      <h5>Time left: {{this.minutes}} min {{timer%60}} sec</h5>
 </div> 
 
-<!-- min {{(timer/60 |number:'0.0-0')}}  -->
+<!-- min {{(timer/60 |number:'0.0-0')}}  :'2.0-0' -->

@@ -12,7 +12,7 @@
         <div class="col"><h5>Test: {{info.TestName}}</h5></div>
         <div class="col"><h5>Number of Questions: {{info.NumOfQuestions}} </h5></div>
         <div class="col"><h5>Finish date: {{this.date}} </h5></div>
-        <div class="col"><h5>Spent time: {{(info.SpentTime/60 |number:'0.0-0')}} min {{info.SpentTime%60}} sec </h5></div>
+        <div class="col"><h5>Spent time: {{this.minutes}} min {{info.SpentTime%60}} sec </h5></div>
         <div class="col"><h5>Correct answers: {{info.CorrectAnswers}} ({{this.correctPercentage|number:'1.2-2'}}%)</h5></div>
     </div>
     <hr>

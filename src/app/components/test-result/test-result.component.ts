@@ -11,7 +11,7 @@ import { Results } from 'src/app/models/result';
 export class TestResultComponent implements OnInit {
     resultId: number;
     info: Results = new Results();
-    date: string;
+    date: string; minutes:any;
     correctPercentage: number;
     constructor(private router: Router, private testService: TestService) { }
 
@@ -21,6 +21,7 @@ export class TestResultComponent implements OnInit {
             this.info = info;
             const date = new Date(info.FinishDate);
             this.date = date.toLocaleString();
+            this.minutes = Math.floor(info.SpentTime/60);
             this.correctPercentage = ((info.CorrectAnswers * 100) / info.NumOfQuestions);
         });
     }
