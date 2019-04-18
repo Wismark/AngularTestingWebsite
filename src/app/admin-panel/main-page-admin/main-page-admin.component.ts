@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Test } from 'src/app/models/test';
 import { Results } from 'src/app/models/result';
-import { TestService } from '../../../services/test.service';
+import { TestService } from '../../services/test.service';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/_shared/authentication/auth services/user.service';
 import { UserModel } from 'src/app/models/userModel';

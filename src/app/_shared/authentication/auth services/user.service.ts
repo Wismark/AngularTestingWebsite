@@ -10,7 +10,7 @@ import { User } from '../auth models/user.model';
 })
 
 export class UserService {
-    readonly rootUrl = 'http://localhost:50672/api/';
+    readonly rootUrl = 'http://localhost:50672';
     constructor(private http: HttpClient) { }
 
     registerUser(user: User) {
@@ -46,11 +46,11 @@ export class UserService {
     }
 
     setAdminRole(userId: string) {
-        return this.http.put(this.rootUrl + 'give-admin/?userId=' + userId, null);
+        return this.http.put(this.rootUrl + '/api/give-admin/?userId=' + userId, null);
     }
 
     setUserRole(userId: string) {
-        return this.http.put(this.rootUrl + 'give-user/?userId=' + userId, null);
+        return this.http.put(this.rootUrl + '/api/give-user/?userId=' + userId, null);
     }
 
 }

@@ -24,7 +24,7 @@ export class TestProcessComponent implements OnInit {
     timer:any; minutes:any; seconds:any;
     numOfQuestuions:number;
     userAnswer: UserAnswer;
-    userAnswers: UserAnswer [] = []; 
+    userAnswers: UserAnswer [] = []; //QuestionAreaId
     interval;
 
     constructor(private testService: TestService,
@@ -77,7 +77,7 @@ export class TestProcessComponent implements OnInit {
                 for(let i=0; i<this.answersInfo.length; i++) {
                     this.userAnswer.Answers.push(false);
                 }
-                this.userAnswer.QuestionIndex = localStorage.CurrentIndex;
+                this.userAnswer.QuestionIndex = localStorage.CurrentIndex;                
             }
         }
 
@@ -186,11 +186,22 @@ export class TestProcessComponent implements OnInit {
 
     onAnswerChange(index) {
         if(this.info.QuestionType === 'radio') {
+            this.userAnswer.Answers = [];
             for(let i=0; i<this.answersInfo.length; i++) {
                 this.userAnswer.Answers.push(false);
             }
 			this.userAnswer.Answers[index] = true;
         } else {
+            var temp = [];
+            for(let i=0; i<this.answersInfo.length; i++) {
+                if( this.userAnswer.Answers[i] ) {
+                    temp.push(true);
+                } else {
+                    temp.push(false);
+                }                  
+            }
+            this.userAnswer.Answers = temp;
+
             if(this.userAnswer.Answers[index]) {
                 this.userAnswer.Answers[index] = false;
             } else { 
@@ -209,7 +220,7 @@ export class TestProcessComponent implements OnInit {
             this.userAnswer.QuestionIndex = localStorage.CurrentIndex;
             this.userAnswers.push(this.userAnswer);
         }
-        
+        this.userAnswer.QuestionAreaId = this.info.AreaId;
         localStorage.setItem('UserAnswers', JSON.stringify(this.userAnswers));
     }
 

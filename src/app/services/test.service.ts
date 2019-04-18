@@ -126,7 +126,7 @@ export class TestService {
 
     checkUsersTestResult(time:number, answers: UserAnswer[], userId:any, testid:number) {
         let date = formatDate(new Date(), 'yyyy/MM/dd hh:mm:ss', 'en');
-        const body = { Answers: answers, UserId:userId, TestId:testid, startDate:date, UserTime:time};
+        const body = { Answers: answers, UserId:userId, TestId:testid, FinishDate:date, UserTime:time};
         return this.http.post<UserAnswer[]>(`${this.APIurl}test/check-result/`, body);
     }
 
