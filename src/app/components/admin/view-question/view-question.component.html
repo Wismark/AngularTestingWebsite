@@ -1,68 +1,74 @@
 <div class="container" style="width: 950px">
-      <div class="d-flex justify-content-center mt-2">
-          <button (click)="onClickLogout()" class="btn btn-primary"> Logout </button>
-          <button (click)="onClickBack()" class="btn btn-primary ml-3"> Back </button>
-      </div>
-        <hr>
-        <h3>{{title}}</h3>
-        <hr>
-      <div class="d-flex flex-column ">
-          <h5>Question text:</h5>
-          <textarea name="QuestionText" id="" cols="100" rows="3" [(ngModel)]="info.Text"></textarea>
-      </div>
+    <div class="d-flex justify-content-center mt-2">
+        <button (click)="onClickLogout()" class="btn btn-primary"> Logout </button>
+        <button (click)="onClickBack()" class="btn btn-primary ml-3"> Back </button>
+    </div>
+    <hr>
+    <h3>{{title}}</h3>
+    <hr>
+    <div class="d-flex flex-column ">
+        <h5>Question text:</h5>
+        <textarea name="QuestionText" id="" cols="100" rows="3" [(ngModel)]="info.Text"></textarea>
+    </div>
 
-      <div class="d-flex flex-row">
+    <div class="d-flex flex-row">
         <h5>Question type:</h5>
         <div class="form-check-inline ml-4">
             <label class="form-check-label">
-              <input type="radio" class="form-check-input" name='type' [checked]="this.Qtype === 'radio'" (change)='qTypeChange(1)' >Radio
+                <input type="radio" class="form-check-input" name='type' [checked]="this.Qtype === 'radio'"
+                    (change)='qTypeChange(1)'>Radio
             </label>
         </div>
         <div class="form-check-inline">
-          <label class="form-check-label">
-            <input type="radio" class="form-check-input"  name='type'  [checked]="this.Qtype === 'check'"  (change)='qTypeChange(2)' >Check
-          </label>
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" name='type' [checked]="this.Qtype === 'check'"
+                    (change)='qTypeChange(2)'>Check
+            </label>
         </div>
-      </div>
+    </div>
 
-      <div class="d-flex flex-row mt-2">
-      <h5>Test area:</h5>  
-        <select [(ngModel)]="areaSelect" class="ml-3 pt-1" style="height:90%" >
-          <option *ngFor="let area of testAreas; let i = index" [value]="i" >
-            {{area.AreaName}}
-          </option>
+    <div class="d-flex flex-row mt-2">
+        <h5>Test area:</h5>
+        <select [(ngModel)]="areaSelect" class="ml-3 pt-1" style="height:90%">
+            <option *ngFor="let area of testAreas; let i = index" [value]="i">
+                {{area.AreaName}}
+            </option>
         </select>
-      </div>
+    </div>
 
-      <hr>
+    <hr>
 
-      <div class="container d-inline-flex flex-column removePadings" style="width: 80%">
-          <h5>Answers:</h5>
-          <table class="table table-bordered"> <!-- TODO: Style  -->
+    <div class="container d-inline-flex flex-column removePadings" style="width: 80%">
+        <h5>Answers:</h5>
+        <table class="table table-bordered">
+            <!-- TODO: Style  -->
             <thead>
                 <th style="width: 60%">Text</th>
                 <th style="width: 80px">Correct</th>
-                <th style="width: 15%" >Delete</th>
+                <th style="width: 15%">Delete</th>
             </thead>
             <tr *ngFor="let answer of answers; let i = index">
                 <td>
-                    <input type="text" class="form-control m-2" id="title" [(ngModel)]='answer.Text' style="width: 350px">
+                    <input type="text" class="form-control m-2" id="title" [(ngModel)]='answer.Text'
+                        style="width: 350px">
                 </td>
                 <td>
                     <div class="form-check-inline ml-4 mt-3">
                         <label *ngIf="Qtype!=='check'" class="form-check-label">
-                          <input type="radio" class="form-check-input" name='optradio'  [checked]="answer.Correct"  (change)='onChangeCorrect(i)'/>
+                            <input type="radio" class="form-check-input" name='optradio' [checked]="answer.Correct"
+                                (change)='onChangeCorrect(i)' />
                         </label>
                         <label *ngIf="Qtype==='check'" class="form-check-label">
-                          <input type="checkbox" class="form-check-input" name='optradio' [checked]="answer.Correct"  (change)='onChangeCorrect(i)'/>
+                            <input type="checkbox" class="form-check-input" name='optradio' [checked]="answer.Correct"
+                                (change)='onChangeCorrect(i)' />
                         </label>
                     </div>
                 </td>
-                <td >
-                        <label class="form-check-label mt-3" >
-                                <input type="checkbox"  (click)="onDeleteAnswers(i)" />
-                                Delete
-                        </label>
+                <td>
+                    <label class="form-check-label mt-3">
+                        <input type="checkbox" (click)="onDeleteAnswers(i)" />
+                        Delete
+                    </label>
                 </td>
             </tr>
         </table>
@@ -70,35 +76,35 @@
             <button class="btn btn-primary" (click)="addAnswerClick()">Add New</button>
             <button class="btn btn-primary ml-5" (click)="removeAnswersClick()">Delete</button>
         </div>
-      </div>
+    </div>
 
-      <hr>
-      <h5>Images:</h5>
-      <div  *ngFor="let image of imagesUrl; let i = index" class="d-flex flex-row d-inline-flex" >
-        <img [src]='_DomSanitizationService.bypassSecurityTrustUrl(imagesUrl[i])' height="150" width="200"/> 
-        <!-- *ngIf="imagesUrl[i]" -->
-          <div class="col">
-            <button class="btn btn-primary ml-1 mt-5" (click)="removeImages(i)">Delete</button> 
-         </div>
-      </div>
-      <br/>
-      <div class="container d-flex justify-content-between removePadings"> 
-        <input type="text" class="text mr-2" style="width:600px"  [(ngModel)]='Files'>
+    <hr>
+    <h5>Images:</h5>
+    <div *ngFor="let image of imagesUrl; let i = index" class="d-flex flex-row d-inline-flex">
+        <img [src]='_DomSanitizationService.bypassSecurityTrustUrl(imagesUrl[i])' height="150" width="200" />
+        <div class="col">
+            <button class="btn btn-primary ml-1 mt-5" (click)="removeImages(i)">Delete</button>
+        </div>
+    </div>
+    <br />
+    <div class="container d-flex justify-content-between removePadings">
+        <input type="text" class="text mr-2" style="width:600px" [(ngModel)]='Files'>
         <button class="btn btn-primary ml-3" (click)="uploader.click()">Browse</button>
-        <input  type="file"  #uploader  style="display: none"  (change)="onFileAdded($event)" value='null' accept="image/*" multiple/>
+        <input type="file" #uploader style="display: none" (change)="onFileAdded($event)" value='null' accept="image/*"
+            multiple />
         <button class="btn btn-primary ml-3" (click)="uploadImagesClick()">Upload</button>
-      </div>
+    </div>
 
-      <hr>
+    <hr>
 
-      <div class="d-flex justify-content-between bd-highlight mb-1 removePadings">          
-          <button class="btn btn-info" (click)="firstQclick()"> &laquo; First</button>
-          <button class="btn btn-info ml-3" (click)="previousQclick()"> &lsaquo; Previous</button>
-          <button class="btn btn-info ml-3" (click)="cancelQclick()"> Cancel </button>
-          <button class="btn btn-info ml-3" (click)="nextQclick()"> Next &rsaquo; </button>
-          <button class="btn btn-info ml-3" (click)="lastQclick()"> Last &raquo;</button>
-          <button class="btn btn-info ml-3" (click)="doneQclick()"> Save</button>
-      </div>
-      <br/>
-      <br/>
-  </div>
+    <div class="d-flex justify-content-between bd-highlight mb-1 removePadings">
+        <button class="btn btn-info" (click)="firstQclick()"> &laquo; First</button>
+        <button class="btn btn-info ml-3" (click)="previousQclick()"> &lsaquo; Previous</button>
+        <button class="btn btn-info ml-3" (click)="cancelQclick()"> Cancel </button>
+        <button class="btn btn-info ml-3" (click)="nextQclick()"> Next &rsaquo; </button>
+        <button class="btn btn-info ml-3" (click)="lastQclick()"> Last &raquo;</button>
+        <button class="btn btn-info ml-3" (click)="doneQclick()"> Save</button>
+    </div>
+    <br />
+    <br />
+</div>

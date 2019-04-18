@@ -1,4 +1,8 @@
 select{
     width: 200px;
-    height: 100px;
+    height: 150px;
+}
+
+.resultSelect {
+    width: 120% !important; 
 }

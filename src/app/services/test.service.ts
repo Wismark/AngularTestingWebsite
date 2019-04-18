@@ -25,24 +25,20 @@ export class TestService {
 
     APIurl = 'http://localhost:50672/api/';
 
-    getTests(active: boolean): Observable<Test[]> {
-        return this.http.get<Test[]>(`${this.APIurl}tests/` + active);
-    }
+    // User
 
-    getCurrentQuestionID(index, testId) {
-        return this.http.get(`${this.APIurl}test-process/${index}/${testId}`);
-    }
-
-    getTestResultsByUserId(userId: string): Observable<Results[]> {
-        return this.http.get<Results[]>(`${this.APIurl}results/` + userId);
+    getAllUsers(): Observable<UserModel[]> {
+        return this.http.get<UserModel[]>(`${this.APIurl}users`);
     }
 
     getUsersWithResults(): Observable<UserModel[]> {
         return this.http.get<UserModel[]>(`${this.APIurl}users/result`);
     }
 
-    getAllUsers(): Observable<UserModel[]> {
-        return this.http.get<UserModel[]>(`${this.APIurl}users`);
+    // ---- Test ----
+
+    getTests(active: boolean): Observable<Test[]> {
+        return this.http.get<Test[]>(`${this.APIurl}tests/` + active);
     }
 
     getTestInfoById(testId: number): Observable<Test> {
@@ -51,6 +47,16 @@ export class TestService {
 
     getTestAreaById(testId: number): Observable<Area[]> {
         return this.http.get<Area[]>(`${this.APIurl}tests/areas/` + testId);
+    }
+
+    updateTestInfo(info: Test) {
+        return this.http.put(`${this.APIurl}test-update/`, info);
+    }
+
+    // ---- Questions ----
+
+    getCurrentQuestionID(index, testId) {
+        return this.http.get(`${this.APIurl}test-process/${index}/${testId}`);
     }
 
     getTestQuestionsById(testId: number): Observable<QuestionInfo[]> {
@@ -63,16 +69,26 @@ export class TestService {
         return this.http.post(`${this.APIurl}tests/new-questions/`, body);
     }
 
-    addAnswersToQuestion(questionId, answers: Answer[]) {
-        const body = { answers, questionId };
-
-        return this.http.post(`${this.APIurl}question/answers/`, body);
+    getQuestionInfoById(questionId: number): Observable<QuestionInfo> {
+        return this.http.get<QuestionInfo>(`${this.APIurl}question/` + questionId);
     }
 
-    addImagesToQuestion(questionId, images: File[]) {
-        const endpoint = `${this.APIurl}question/images/`;
-        const formData = new FormData();
+    updateTestQuestion(info: QuestionInfo) {
+        const body = { Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId, QuestionId: info.QuestionId };
 
+        return this.http.put(`${this.APIurl}tests/update-questions/`, body);
+    }
+
+    updateQuestions(testId: number, questions: QuestionInfo[]) {
+        const body = { testId, questions };
+
+        return this.http.post(`${this.APIurl}test/update-question/`, body);
+    }
+
+    // ---- Images ----
+
+    addImagesToQuestion(questionId, images: File[]) {
+        const formData = new FormData();
         images.forEach(img => {
             formData.append('uploadedFiles', img, img.name);
         });
@@ -84,45 +100,28 @@ export class TestService {
         return this.http.get<ImageInfo[]>(`${this.APIurl}question/get-images/` + questionId);
     }
 
-    getQuestionInfoById(questionId: number): Observable<QuestionInfo> {
-        return this.http.get<QuestionInfo>(`${this.APIurl}question/` + questionId);
-    }
-
-    getQuestionAnswersById(questionId: number): Observable<Answer[]> {
-        return this.http.get<Answer[]>(`${this.APIurl}question/answers/` + questionId);
-    }
-
-    updateTestQuestion(info: QuestionInfo) {
-        const body = { Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId, QuestionId: info.QuestionId };
-
-        return this.http.put(`${this.APIurl}tests/update-questions/`, body);
-    }
-
     updateQuestionImages(QuestionId, imagesInfos) {
         const body = { questionId: QuestionId, ImageInfos: imagesInfos };
 
         return this.http.put(`${this.APIurl}question/update-images/`, body);
     }
 
-    updateQuestions(testId: number, questions: QuestionInfo[]) {
-        const body = { testId, questions };
+    // ---- Answers ----
 
-        return this.http.post(`${this.APIurl}test/update-question/`, body);
+    addAnswersToQuestion(questionId, answers: Answer[]) {
+        const body = { answers, questionId };
+
+        return this.http.post(`${this.APIurl}question/answers/`, body);
     }
 
-    updateTestInfo(info: Test) {
-        return this.http.put(`${this.APIurl}test-update/`, info);
+    getQuestionAnswersById(questionId: number): Observable<Answer[]> {
+        return this.http.get<Answer[]>(`${this.APIurl}question/answers/` + questionId);
     }
 
-    updateAreas(areas: Area[], testId: number) {
-        const body = { Areas: areas, TestID: testId };
+    // ---- Results and Areas ----
 
-        return this.http.post(`${this.APIurl}test/update-areas/`, body);
-    }
-
-    checkAreasOnDelete(areas: Area[], testId: number): Observable<AreaDeleteInfo[]> {
-        const body = { Areas: areas, TestID: testId };
-        return this.http.post<AreaDeleteInfo[]>(`${this.APIurl}test/check-areas/`, body);
+    getTestResultsByUserId(userId: string): Observable<Results[]> {
+        return this.http.get<Results[]>(`${this.APIurl}results/` + userId);
     }
 
     checkUsersTestResult(time:number, answers: UserAnswer[], userId:any, testid:number) {
@@ -133,5 +132,16 @@ export class TestService {
 
     getTestResult(resultId) {
         return this.http.get<Results>(`${this.APIurl}test/result/`+ resultId);
+    }
+    
+    updateAreas(areas: Area[], testId: number) {
+        const body = { Areas: areas, TestID: testId };
+
+        return this.http.post(`${this.APIurl}test/update-areas/`, body);
+    }
+
+    checkAreasOnDelete(areas: Area[], testId: number): Observable<AreaDeleteInfo[]> {
+        const body = { Areas: areas, TestID: testId };
+        return this.http.post<AreaDeleteInfo[]>(`${this.APIurl}test/check-areas/`, body);
     }
 }

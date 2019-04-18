@@ -8,87 +8,118 @@ import { UserModel } from 'src/app/models/userModel';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-main-page-admin',
-  templateUrl: './main-page-admin.component.html',
-  styleUrls: ['./main-page-admin.component.css']
+    selector: 'app-main-page-admin',
+    templateUrl: './main-page-admin.component.html',
+    styleUrls: ['./main-page-admin.component.css']
 })
 export class MainPageAdminComponent implements OnInit {
-  tests: Test[];
-  results: Results[];
-  users: UserModel[];
-  allUsers: UserModel[];
+    tests: Test[];
+    results: Results[];
+    users: UserModel[];
+    allUsers: UserModel[];
 
-  testSelect: number;
-  userResult: number;
-  userTest: number;
-  userForRole: string;
+    testSelect: any;
+    userForResult: any;
+    resultSelect: any;
+    userForRole: string;
 
-  constructor(private userService: UserService, private testService: TestService, private router: Router, private toastr: ToastrService) { }
+    constructor(private userService: UserService,
+                private testService: TestService,
+                private router: Router,
+                private toastr: ToastrService) { }
 
-  ngOnInit() {
-    this.testService.getTests(false).subscribe(tests => {
-    this.tests = tests;
-    });
+    ngOnInit() {
+        this.testService.getTests(false).subscribe(tests => {
+            this.tests = tests;
+        });
 
-    this.testService.getUsersWithResults().subscribe(users => {
-      this.users = users;
-    });
+        this.testService.getUsersWithResults().subscribe(users => {
+            this.users = users;
+        });
 
-    this.testService.getAllUsers().subscribe(users => {
-      this.allUsers = users;
-    });
+        this.testService.getAllUsers().subscribe(users => {
+            this.allUsers = users;
+        });
 
-    this.testSelect = 0;
-    this.userResult = 0;
-    this.userTest = 0;
-    this.userForRole = '123';
-  }
+        if (localStorage.UserForResult !== undefined) {
+            this.userForResult = localStorage.UserForResult;
+            localStorage.removeItem('UserForResult');
+            this.userClick();
+        } else {
+            this.userForResult = 0;
+        }
 
-  Logout() {
-    localStorage.removeItem('userToken');
-    this.router.navigate(['/login']);
-  }
-
-  SetAdminClick() {
-    this.userService.setAdminRole(this.userForRole).subscribe( (data: any) => {
-      this.checkRoleChangeResponse(data);
-    });
-  }
-
-  SetUserClick() {
-    this.userService.setUserRole(this.userForRole).subscribe( (data: any) => {
-      this.checkRoleChangeResponse(data);
-    });
-  }
-
-  checkRoleChangeResponse( response: number)  {
-    if (response === 0) {
-      this.toastr.error('Error, user not found!');
+        this.testSelect = 0;
+        this.resultSelect = 0;
+        this.userForRole = '123';
     }
-    if (response === 1 ) {
-      this.toastr.success('Role was updated!');
-      this.ngOnInit();
+
+    Logout() {
+        localStorage.removeItem('userToken');
+        this.router.navigate(['/login']);
     }
-    if (response === 2 ) {
-        this.toastr.warning('User already have this role!');
+
+    SetAdminClick() {
+        this.userService.setAdminRole(this.userForRole).subscribe((data: any) => {
+            this.checkRoleChangeResponse(data);
+        });
     }
-    if (response === 3 ) {
-      this.toastr.error ('Error! Cannot update this user role');
+
+    SetUserClick() {
+        this.userService.setUserRole(this.userForRole).subscribe((data: any) => {
+            this.checkRoleChangeResponse(data);
+        });
     }
-  }
+
+    checkRoleChangeResponse(response: number) {
+        if (response === 0) {
+            this.toastr.error('Error, user not found!');
+        }
+        if (response === 1) {
+            this.toastr.success('Role was updated!');
+            this.ngOnInit();
+        }
+        if (response === 2) {
+            this.toastr.warning('User already have this role!');
+        }
+        if (response === 3) {
+            this.toastr.error('Error! Cannot update this user role');
+        }
+    }
 
 
-  editTestSelectClick() {
-    localStorage.ViewTestId = this.testSelect;
-    this.router.navigate(['/test-view']);
-  }
+    editTestSelectClick() {
+        localStorage.ViewTestId = this.testSelect;
+        this.router.navigate(['/test-view']);
+    }
 
-  startTestClick() {
-    console.log(this.testSelect);
-    this.router.navigate(['/test']);
-  }
+    startTestClick() {
+        if (parseInt(this.testSelect, 10) > 0) {
+            localStorage.TestInUseId = this.testSelect;
+            const index = this.tests.findIndex((test) => test.TestId === parseInt(this.testSelect, 10));
+            localStorage.CurrentIndex = 0;
+            const count = this.tests[index].NumOfQuestions;
+            localStorage.TestInUseCount = count;
+            localStorage.TestInUseTime = this.tests[index].TimeLimitation * 60;
+            this.router.navigate(['/test']);
+        }
+    }
 
-  newTest() {
-    this.router.navigate(['/test-view']);
-  }
+    newTest() {
+        this.router.navigate(['/test-view']);
+    }
+
+    userResultSelect() {
+        if (this.resultSelect > 0) {
+            localStorage.UserResultId = this.resultSelect;
+            localStorage.UserForResult = this.userForResult;
+            this.router.navigate(['/results']);
+        }
+    }
+
+    userClick() {
+        this.testService.getTestResultsByUserId(this.userForResult).subscribe((results) => {
+            this.results = results;
+        });
+    }
 }

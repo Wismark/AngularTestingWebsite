@@ -21,25 +21,33 @@ export class TestProcessComponent implements OnInit {
     questionID: number;
     info: QuestionInfo = new QuestionInfo();
     questionNumber:number;
-    timer:any; minutes:any;
+    timer:any; minutes:any; seconds:any;
     numOfQuestuions:number;
     userAnswer: UserAnswer;
-    userAnswers: UserAnswer [] = []; //localStorage.TestInUseTime
-    
-    constructor(private testService: TestService, private router: Router, private _DomSanitizationService: DomSanitizer,  private toastr: ToastrService) 
-    { 
-        this.timer=localStorage.TestInUseTime;
-        this.startTimer(); 
-    }
+    userAnswers: UserAnswer [] = []; 
+    interval;
 
-    interval; // clearInterval(this.interval);
+    constructor(private testService: TestService,
+                private router: Router,
+                private _DomSanitizationService: DomSanitizer,
+                private toastr: ToastrService) 
+    { 
+        if(localStorage.TestInUseId === undefined) {
+           this.router.navigate(['/forbidden']);
+        } else {
+            this.timer=localStorage.TestInUseTime;
+            this.minutes = Math.floor(this.timer/60);
+            this.seconds = (this.timer%60);
+            this.startTimer(); 
+        }   
+    }
 
     startTimer() {
         this.interval = setInterval(() => {
         if(this.timer > 0) {
             this.timer--;
             this.minutes = Math.floor(this.timer/60);
-            console.log(this.timer);
+            this.seconds = (this.timer%60);
         } else {
             this.toastr.toastrConfig.timeOut=2000;
             this.toastr.info('Time is up! Let\'s see results..');
@@ -58,10 +66,8 @@ export class TestProcessComponent implements OnInit {
         if(localStorage.UserAnswers !== undefined) {
             this.userAnswers = JSON.parse(localStorage.UserAnswers);
             if( localStorage.UserAnswers[localStorage.CurrentIndex] !== undefined) {
-         //       console.log(localStorage.UserAnswers[localStorage.CurrentIndex]);
                 this.userAnswer = this.userAnswers[localStorage.CurrentIndex];
             }             
-        //    console.log(this.userAnswer + ' ' +localStorage.CurrentIndex );
         }
 
          if(this.userAnswer === undefined) {
@@ -84,13 +90,11 @@ export class TestProcessComponent implements OnInit {
             }
             return; 
         })
-
     }
 
     getQuestionInfo() {
             this.testService.getQuestionInfoById(this.questionID).subscribe( (info) => {
             this.info = info;
- //           console.log(info);	
         });
 
         this.testService.getQuestionAnswersById(this.questionID).subscribe( (answers) => {
@@ -103,7 +107,6 @@ export class TestProcessComponent implements OnInit {
                 this.imagesInfos.forEach( (info) => {
                     this.imagesUrl.push(info.ImageUrl);
                 })
- //          console.log(this.imagesUrl[0]);
         });
     }
 
@@ -115,12 +118,15 @@ export class TestProcessComponent implements OnInit {
     goBack() {
         if (confirm('Are you sure you want to terminate test?')) {
             this.clearStorage();
-            this.router.navigate(['/']);
+            clearInterval(this.interval);
+            if (localStorage.userRole.includes('Admin') || localStorage.userRole.includes('SuperAdmin')) {
+                return this.router.navigate(['/admin']);
+            }
+            return this.router.navigate(['/']);
         } 
     }
 
     clearStorage() {
-        clearInterval(this.interval);
         localStorage.removeItem('TestInUseId');
         localStorage.removeItem('CurrentIndex');
         localStorage.removeItem('TestInUseCount');
@@ -131,16 +137,14 @@ export class TestProcessComponent implements OnInit {
     finishTestclick() {
         if (confirm('Are you sure you want to finish test?')) {
             this.finishTest();
-            //this.router.navigate(['/results']);
         }    
-       
     }
 
     finishTest() {
+        clearInterval(this.interval);
         this.updateAnswers();
         this.userAnswers = JSON.parse(localStorage.UserAnswers);
-        console.log(localStorage.userId); 
-        this.checkAnswers();
+        //this.checkAnswers();
         this.testService.checkUsersTestResult(this.timer,this.userAnswers, localStorage.userId, localStorage.TestInUseId).subscribe((resultId) => {
             localStorage.UserResultId = resultId;
             this.clearStorage();
@@ -182,7 +186,6 @@ export class TestProcessComponent implements OnInit {
 
     onAnswerChange(index) {
         if(this.info.QuestionType === 'radio') {
-            //this.userAnswer.Answers.forEach(a => a = false); //this.answers.forEach( a => a.Correct = false)
             for(let i=0; i<this.answersInfo.length; i++) {
                 this.userAnswer.Answers.push(false);
             }
@@ -194,7 +197,6 @@ export class TestProcessComponent implements OnInit {
                  this.userAnswer.Answers[index] = true;
             }
         }
-    //    console.log(this.userAnswer);
     }
 
     updateAnswers() {
@@ -211,13 +213,10 @@ export class TestProcessComponent implements OnInit {
         localStorage.setItem('UserAnswers', JSON.stringify(this.userAnswers));
     }
 
-    //this.userAnswers = JSON.parse(localStorage.UserAnswers);
-
     checkAnswers() {
             this.userAnswers.forEach(a=> {
             console.log('qIndex=' + a.QuestionIndex);
             a.Answers.forEach( (e,i) => {
-           //     if(e===null) a.Answers.push(false);
                 console.log(i + ' : ' + e)
                 });
             console.log('----');

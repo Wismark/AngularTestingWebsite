@@ -15,12 +15,12 @@ export class MainPageComponent implements OnInit {
     tests: Test[];
     results: Results[];
     userid: string;
-
     resultSelect: number;
     testIdSelect: string;
 
-    constructor(private testService: TestService, private router: Router, private _DomSanitizationService: DomSanitizer) {
-    }
+    constructor(private testService: TestService,
+                private router: Router,
+                private _DomSanitizationService: DomSanitizer) { }
 
     ngOnInit() {
         this.clearLocalStorage();
@@ -38,7 +38,6 @@ export class MainPageComponent implements OnInit {
     }
 
     resultSelectClick(index) {
-        console.log('id=' + this.resultSelect);
         if (this.resultSelect > 0) {
             this.clearLocalStorage();
             localStorage.UserResultId = this.resultSelect;
@@ -48,13 +47,10 @@ export class MainPageComponent implements OnInit {
 
     testSelectClick() {
         if (parseInt(this.testIdSelect, 10) > 0) {
-            //  console.log( this.tests[this.testIdSelect - 1].Name );
             localStorage.TestInUseId = this.testIdSelect;
             const index = this.tests.findIndex((test) => test.TestId === parseInt(this.testIdSelect, 10));
-            // console.log('index=' + index);
             localStorage.CurrentIndex = 0;
-            const count = this.tests[index].NumOfQuestions;
-            localStorage.TestInUseCount = count;
+            localStorage.TestInUseCount = this.tests[index].NumOfQuestions;
             localStorage.TestInUseTime = this.tests[index].TimeLimitation * 60;
             this.router.navigate(['/test']);
         }

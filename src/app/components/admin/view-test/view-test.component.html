@@ -12,12 +12,13 @@
             <h4 class="d-flex">Time limitation (min):</h4>
         </div>
         <div class="">
-            <input type="text"  [(ngModel)]="testInfo.Name" (change)='stateChange()' class="form-control m-2" id="title">
-            <input type="text"  [(ngModel)]="testInfo.TimeLimitation" (change)='stateChange()' class="form-control m-2" id="timeLim">
+            <input type="text" [(ngModel)]="testInfo.Name" (change)='stateChange()' class="form-control m-2" id="title">
+            <input type="text" [(ngModel)]="testInfo.TimeLimitation" (change)='stateChange()' class="form-control m-2"
+                id="timeLim">
         </div>
         <div class="form-check ml-3 mt-3">
             <label class="form-check-label">
-                <input type="checkbox" [(ngModel)]="testInfo.Active" (change)='stateChange()'/>
+                <input type="checkbox" [(ngModel)]="testInfo.Active" (change)='stateChange()' />
                 Active
             </label>
         </div>
@@ -25,21 +26,23 @@
 
     <hr>
     <h3>Test area:</h3>
-    <div class="container d-inline-flex d-flex flex-column" style="width: 320px"> <!-- TODO: Style -->
-        <table class="table table-bordered"> 
+    <div class="container d-inline-flex d-flex flex-column" style="width: 320px">
+        <!-- TODO: Style -->
+        <table class="table table-bordered">
             <thead>
                 <th style="width: 170px">Name</th>
                 <th>Delete</th>
             </thead>
             <tr *ngFor="let area of areas; let i = index">
                 <td>
-                    <input type="text" class="form-control m-2" name='AreaName' [(ngModel)]='area.AreaName' (change)='stateChange()' style="width: 150px">
+                    <input type="text" class="form-control m-2" name='AreaName' [(ngModel)]='area.AreaName'
+                        (change)='stateChange()' style="width: 150px">
                 </td>
                 <td>
-                        <label class="form-check-label mt-3">
-                                <input type="checkbox"  (click)="onDeleteAreas(i)" />
-                                Delete
-                        </label>
+                    <label class="form-check-label mt-3">
+                        <input type="checkbox" (click)="onDeleteAreas(i)" />
+                        Delete
+                    </label>
                 </td>
             </tr>
         </table>
@@ -50,7 +53,7 @@
     </div>
     <hr>
     <h3>Questions:</h3>
-    <div class="container p-0"> 
+    <div class="container p-0">
         <table class="table table-bordered">
             <thead>
                 <th>Text</th>
@@ -63,19 +66,15 @@
             </thead>
             <tr *ngFor="let question of questions; let i = index">
                 <td>
-                    <!-- <input type="text" class="form-control m-2" id="title" value="{{question.Text}}"  readonly style="width: 250px"> -->
                     <label>{{question.Text}}</label>
                 </td>
                 <td>
-                    <!-- <input type="text" class="form-control m-2" id="title" value="{{question.NumOfImages}}" readonly  style="width: 50px"> -->
                     <label>{{question.NumOfImages}}</label>
                 </td>
                 <td>
-                    <!-- <input type="text" class="form-control m-2" id="title" value="{{question.QuestionType}}" readonly  style="width: 100px"> -->
                     <label>{{question.QuestionType}}</label>
                 </td>
                 <td>
-                    <!-- <input type="text" class="form-control m-2" id="title" value="{{question.Answers}}"  readonly style="width: 300px"> -->
                     <label>{{question.Answers}}</label>
                 </td>
                 <td>
@@ -84,21 +83,21 @@
                 <td>
                     <button class="btn btn-primary mt-1" (click)="editQuestion(i)">Edit</button>
                 </td>
-                <td >
+                <td>
                     <label class="form-check-label mt-3" style="width: 70px">
-                        <input type="checkbox"  (click)="onDeleteQuestions(i)" />
+                        <input type="checkbox" (click)="onDeleteQuestions(i)" />
                         Delete
                     </label>
-                </td> 
+                </td>
             </tr>
         </table>
-        <div class="d-flex justify-content-between" >
+        <div class="d-flex justify-content-between">
             <button (click)="addNewQuestionClick()" class="btn btn-primary  "> Add new </button>
-            <button (click)="removeQuestionClick()" class="btn btn-primary m-0 "> Delete  </button>
+            <button (click)="removeQuestionClick()" class="btn btn-primary m-0 "> Delete </button>
         </div>
     </div>
     <hr>
-    <div *ngIf="oldTest.lenght>0" class="container p-0">   
+    <div *ngIf="oldTest.lenght>0" class="container p-0">
         <h3>Old Versions:</h3>
         <table class="table table-bordered">
             <thead>
@@ -110,7 +109,7 @@
             </thead>
             <!-- TODO -->
             <!--   *ngFor="let question of questions; let i = index" -->
-            <tr >
+            <tr>
                 <td>
                     <input type="text" class="form-control m-2" id="title" value="" style="width: 150px">
                 </td>
@@ -130,8 +129,8 @@
         </table>
     </div>
     <div class="d-flex justify-content-center">
-            <button (click)="saveChanges()" class="btn btn-secondary"> Save changes </button>
-            <button (click)="cancelChanges()" class="btn btn-secondary ml-3"> Cancel changes </button>
+        <button (click)="saveChanges()" class="btn btn-secondary"> Save changes </button>
+        <button (click)="cancelChanges()" class="btn btn-secondary ml-3"> Cancel changes </button>
     </div>
-    <br/>
+    <br />
 </div>

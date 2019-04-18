@@ -29,12 +29,14 @@ export class ViewQuestionComponent implements OnInit {
 	questionID: number;
 	info: QuestionInfo = new QuestionInfo();
 
-	constructor(private router: Router, private testService: TestService, private toastr: ToastrService, private _DomSanitizationService: DomSanitizer) { }
+	constructor(private router: Router,
+                private testService: TestService,
+                private toastr: ToastrService,
+                private _DomSanitizationService: DomSanitizer) { }
 
 	ngOnInit() {
 
 		if (localStorage.ViewQuestionId !== undefined) {
-			console.log('Init');
 			this.questionID = localStorage.ViewQuestionId;
 			this.questionExists = true;
 			this.title = 'Question edit';
@@ -232,7 +234,7 @@ export class ViewQuestionComponent implements OnInit {
 
 	//#region Bottom menu
 
-	doneQclick() { // debugger;
+	doneQclick() { 
 		if (this.areaSelect === undefined) {
 			return this.toastr.info('Please select test area for the question');
 		}

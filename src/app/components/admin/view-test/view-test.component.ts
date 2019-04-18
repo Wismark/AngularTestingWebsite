@@ -8,6 +8,7 @@ import { QuestionInfo } from 'src/app/models/QuestionInfo';
 import { ToastrService } from 'ngx-toastr';
 import { Console } from '@angular/core/src/console';
 import { AreaDeleteInfo } from 'src/app/models/areaDeleteInfo';
+
 /* tslint:disable */
 @Component({
 	selector: 'app-view-test',
@@ -28,7 +29,10 @@ export class ViewTestComponent implements OnInit {
 	areas_deleteInfo: AreaDeleteInfo [] = [];
 	active = false;
 	Title = 'Test view';
-	constructor(private router: Router, private testService: TestService, private toastr: ToastrService) { }
+
+	constructor(private router: Router, 
+                private testService: TestService,
+                private toastr: ToastrService) { }
 
 	ngOnInit() {
 		if(localStorage.ViewTestId !== undefined) {
@@ -138,7 +142,6 @@ export class ViewTestComponent implements OnInit {
 	}
 
 	addNewQuestionClick() {
-		console.log('1');
 		if (this.unsaved) {
 			if (confirm('There\'s unsaved changes, would you like to save them?')) {
 				this.saveChanges();
@@ -178,7 +181,7 @@ export class ViewTestComponent implements OnInit {
 		this.toastr.info('There\'s no changes to save..');
 	}
 
-	cancelChanges(){
+	cancelChanges() {
 		this.unsaved = false;
 		this.toastr.info('Changes were canceled!');
 		this.ngOnInit();

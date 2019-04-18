@@ -1,7 +1,0 @@
-/*<ul>
-    <li> <a [routerLink]="['/']" routerLinkActive="router-link-active">Main</a></li>
-    <li> <a [routerLink]="['/login']" routerLinkActive="router-link-active">Login</a></li>
-    <li> <a [routerLink]="['/register']" routerLinkActive="router-link-active">Registration</a></li>
-    <li> <a [routerLink]="['/admin']" routerLinkActive="router-link-active">AdminPanel</a></li> 
-    <li> <a [routerLink]="['/test-view']" routerLinkActive="router-link-active">TestView</a></li> 
-</ul>*/

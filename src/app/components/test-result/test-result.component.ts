@@ -11,17 +11,20 @@ import { Results } from 'src/app/models/result';
 export class TestResultComponent implements OnInit {
     resultId: number;
     info: Results = new Results();
-    date: string; minutes:any;
+    date: string; minutes: any;
     correctPercentage: number;
     constructor(private router: Router, private testService: TestService) { }
 
     ngOnInit() {
         this.resultId = localStorage.UserResultId;
+        if (this.resultId < 1) {
+            return this.router.navigate(['/forbidden']);
+        }
         this.testService.getTestResult(this.resultId).subscribe((info) => {
             this.info = info;
             const date = new Date(info.FinishDate);
             this.date = date.toLocaleString();
-            this.minutes = Math.floor(info.SpentTime/60);
+            this.minutes = Math.floor(info.SpentTime / 60);
             this.correctPercentage = ((info.CorrectAnswers * 100) / info.NumOfQuestions);
         });
     }
@@ -33,6 +36,9 @@ export class TestResultComponent implements OnInit {
 
     onClickMain() {
         localStorage.removeItem('UserResultId');
-        this.router.navigate(['/']);
+        if (localStorage.userRole.includes('Admin') || localStorage.userRole.includes('SuperAdmin')) {
+            return this.router.navigate(['/admin']);
+        }
+        return this.router.navigate(['/']);
     }
 }

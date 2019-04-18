@@ -5,30 +5,30 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  isLoginError: boolean = false;
-  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
+    isLoginError = false;
+    constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  OnSubmit(userName, password){
-    this.userService.userAuthentication(userName, password).subscribe((data: any ) => {
-      localStorage.setItem('userToken', data.access_token);
-      localStorage.setItem('userId', data.userId);
-      localStorage.setItem('userRole', data.role);
-      if(JSON.parse(data.role) === 'Admin' || JSON.parse(data.role) === 'SuperAdmin') {
-        this.router.navigate(['/admin']);
-      } else {
-        this.router.navigate(['/']);
-      }
-    },
-    (err: HttpErrorResponse) => {
-      this.toastr.error('Password or UserName is incorrect!');
-    } );
-  }
+    OnSubmit(userName, password) {
+        this.userService.userAuthentication(userName, password).subscribe((data: any) => {
+            localStorage.setItem('userToken', data.access_token);
+            localStorage.setItem('userId', data.userId);
+            localStorage.setItem('userRole', data.role);
+            if (JSON.parse(data.role) === 'Admin' || JSON.parse(data.role) === 'SuperAdmin') {
+                this.router.navigate(['/admin']);
+            } else {
+                this.router.navigate(['/']);
+            }
+        },
+            (err: HttpErrorResponse) => {
+                this.toastr.error('Password or UserName is incorrect!');
+            });
+    }
 }

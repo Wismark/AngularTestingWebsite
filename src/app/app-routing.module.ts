@@ -23,8 +23,6 @@ const routes: Routes = [
   {path: 'test-view', component: ViewTestComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
   {path: 'forbidden', component: ForbiddenComponent, canActivate: [AuthGuard]},
   {path: 'question-view', component: ViewQuestionComponent, canActivate: [AuthGuard], data : { roles: ['Admin', 'SuperAdmin'] }},
-
- // {path: '', redirectTo: '/login', pathMatch:'full'}
 ];
 
 @NgModule({
