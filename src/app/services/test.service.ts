@@ -12,6 +12,7 @@ import { ImageInfo } from '../models/ImageInfo';
 import { AreaDeleteInfo } from '../models/areaDeleteInfo';
 import { UserAnswer } from '../models/userAnswer';
 import {formatDate } from '@angular/common';
+import { ResultByArea } from '../models/resultByArea';
 
 @Injectable({
     providedIn: 'root'
@@ -143,5 +144,9 @@ export class TestService {
     checkAreasOnDelete(areas: Area[], testId: number): Observable<AreaDeleteInfo[]> {
         const body = { Areas: areas, TestID: testId };
         return this.http.post<AreaDeleteInfo[]>(`${this.APIurl}test/check-areas/`, body);
+    }
+
+    getResultsInArea(resultId:number) {
+        return this.http.get<ResultByArea[]>(`${this.APIurl}area-results/${resultId}`);
     }
 }

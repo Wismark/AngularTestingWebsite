@@ -4,7 +4,7 @@
     </div>
     <hr>
     <div class="row d-flex flex-row pb-2">
-        <div class="col">
+        <div class="col flex-grow-0" >
             <h4>Change test:</h4>
             <select [(ngModel)]="testSelect" size="5">
                 <option *ngFor="let test of tests" [value]="test.TestId">
@@ -16,7 +16,7 @@
                 <button class="btn btn-primary ml-2" (click)="editTestSelectClick()">Edit</button>
             </div>
         </div>
-        <div class="col mt-5 ml-4">
+        <div class="d-flex flex-column justify-content-center ml-auto mr-auto">
             <button class="btn btn-primary" (click)="newTest()">Add new Test</button>
         </div>
     </div>

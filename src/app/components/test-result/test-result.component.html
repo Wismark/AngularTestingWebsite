@@ -14,5 +14,24 @@
         <div class="col"><h5>Spent time: {{this.minutes}} min {{info.SpentTime%60}} sec </h5></div>
         <div class="col"><h5>Correct answers: {{info.CorrectAnswers}} ({{this.correctPercentage|number:'1.2-2'}}%)</h5></div>
     </div>
+    <br>
+       <table class="table table-bordered">
+            <thead>
+                <th style="width: 60%">Area</th>
+                <th style="width: 60%">Correct (%)</th>
+            </thead>
+            <tr *ngFor="let result of areaResults">
+                <td>
+                    <label>
+                        <strong>{{result.AreaName}}</strong>
+                    </label>
+                </td>
+                <td>
+                    <label>
+                        <strong>{{result.CorrectPercentage}}%</strong>
+                    </label>
+                </td>
+            </tr>
+        </table>
     <hr>
 </div>
