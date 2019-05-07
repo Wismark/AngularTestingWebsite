@@ -72,11 +72,13 @@ export class ViewTestComponent implements OnInit {
 
 	logout() {
 		localStorage.removeItem('userToken');
+        
 		this.router.navigate(['/login']);
 	}
 
 	back() {
 		localStorage.removeItem('ViewTestId');
+        localStorage.removeItem('NewVersion');
 		this.router.navigate(['/admin']);
 	}
 
@@ -161,7 +163,6 @@ export class ViewTestComponent implements OnInit {
 
 	saveChanges() {
 		if( this.unsaved ) {
-			console.log('Hey there');
 			this.testService.updateTestInfo(this.testInfo).subscribe((testId:number) => {
 				this.testInfo.TestId = testId;
 				this.testService.updateAreas(this.areas,this.testInfo.TestId ).subscribe(() => {

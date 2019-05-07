@@ -89,8 +89,18 @@ export class MainPageAdminComponent implements OnInit {
 
 
     editTestSelectClick() {
+         if (parseInt(this.testSelect, 10) > 0) {
         localStorage.ViewTestId = this.testSelect;
         this.router.navigate(['/test-view']);
+        }
+    }
+
+    newVersionTestSelectClick() {
+         if (parseInt(this.testSelect, 10) > 0) {
+        localStorage.ViewTestId = this.testSelect;
+        localStorage.NewVersion = true;
+        this.router.navigate(['/test-view']);
+         }
     }
 
     startTestClick() {

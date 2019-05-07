@@ -19,8 +19,7 @@ export class MainPageComponent implements OnInit {
     testIdSelect: string;
 
     constructor(private testService: TestService,
-                private router: Router,
-                private _DomSanitizationService: DomSanitizer) { }
+                private router: Router) { }
 
     ngOnInit() {
         this.clearLocalStorage();
