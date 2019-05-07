@@ -8,6 +8,8 @@ import { QuestionInfo } from 'src/app/models/QuestionInfo';
 import { ToastrService } from 'ngx-toastr';
 import { Console } from '@angular/core/src/console';
 import { AreaDeleteInfo } from 'src/app/models/areaDeleteInfo';
+import { QuestionService } from 'src/app/services/question.service';
+import { TestResultsService } from 'src/app/services/test-results.service';
 
 /* tslint:disable */
 @Component({
@@ -32,7 +34,9 @@ export class ViewTestComponent implements OnInit {
 
 	constructor(private router: Router, 
                 private testService: TestService,
-                private toastr: ToastrService) { }
+				private toastr: ToastrService,
+				private questionService: QuestionService,
+				private testResults: TestResultsService) { }
 
 	ngOnInit() {
 		if(localStorage.ViewTestId !== undefined) {
@@ -45,7 +49,7 @@ export class ViewTestComponent implements OnInit {
 				this.areas = areas;
 			});
 
-			this.testService.getTestQuestionsById(localStorage.ViewTestId).subscribe((questions) => {
+			this.questionService.getTestQuestionsById(localStorage.ViewTestId).subscribe((questions) => {
 				this.questions = questions;
 			});
 		}
@@ -96,7 +100,7 @@ export class ViewTestComponent implements OnInit {
 				this.areas_toDelete.push(this.areas[i]);
 			}
 		}
-		this.testService.checkAreasOnDelete(this.areas_toDelete, this.testInfo.TestId ).subscribe((info) => {
+		this.testResults.checkAreasOnDelete(this.areas_toDelete, this.testInfo.TestId ).subscribe((info) => {
 			this.areas_deleteInfo = info;
 			if( this.areas_deleteInfo.length > 0 ) {
 				this.toastr.toastrConfig.timeOut=10000;
@@ -165,11 +169,11 @@ export class ViewTestComponent implements OnInit {
 		if( this.unsaved ) {
 			this.testService.updateTestInfo(this.testInfo).subscribe((testId:number) => {
 				this.testInfo.TestId = testId;
-				this.testService.updateAreas(this.areas,this.testInfo.TestId ).subscribe(() => {
+				this.testResults.updateAreas(this.areas,this.testInfo.TestId ).subscribe(() => {
 							if(this.questions_changed) {
-								this.testService.updateQuestions(this.testInfo.TestId, this.questions).subscribe(() => {	
+								this.questionService.updateQuestions(this.testInfo.TestId, this.questions).subscribe(() => {	
 								this.questions_changed=false;
-								this.testService.getTestQuestionsById(this.testInfo.TestId).subscribe((questions) => {
+								this.questionService.getTestQuestionsById(this.testInfo.TestId).subscribe((questions) => {
 									this.questions = questions;
 								});		
 							});

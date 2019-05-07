@@ -5,6 +5,7 @@ import { Results } from 'src/app/models/result';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UserAnswer } from 'src/app/models/userAnswer';
+import { TestResultsService } from 'src/app/services/test-results.service';
 
 @Component({
     selector: 'app-main-page',
@@ -19,7 +20,8 @@ export class MainPageComponent implements OnInit {
     testIdSelect: string;
 
     constructor(private testService: TestService,
-                private router: Router) { }
+                private router: Router,
+                private testResultsService: TestResultsService) { }
 
     ngOnInit() {
         this.clearLocalStorage();
@@ -28,7 +30,7 @@ export class MainPageComponent implements OnInit {
             this.tests = tests;
         });
 
-        this.testService.getTestResultsByUserId(this.userid).subscribe(results => {
+        this.testResultsService.getTestResultsByUserId(this.userid).subscribe(results => {
             this.results = results;
         });
 

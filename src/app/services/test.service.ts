@@ -56,35 +56,35 @@ export class TestService {
 
     // ---- Questions ----
 
-    getCurrentQuestionID(index, testId) {
-        return this.http.get(`${this.APIurl}test-process/${index}/${testId}`);
-    }
+    // getCurrentQuestionID(index, testId) {
+    //     return this.http.get(`${this.APIurl}test-process/${index}/${testId}`);
+    // }
 
-    getTestQuestionsById(testId: number): Observable<QuestionInfo[]> {
-        return this.http.get<QuestionInfo[]>(`${this.APIurl}tests/questions/` + testId);
-    }
+    // getTestQuestionsById(testId: number): Observable<QuestionInfo[]> {
+    //     return this.http.get<QuestionInfo[]>(`${this.APIurl}tests/questions/` + testId);
+    // }
 
-    addNewTestQuestion(info: QuestionInfo) {
-        const body = { Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId };
+    // addNewTestQuestion(info: QuestionInfo) {
+    //     const body = { Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId };
 
-        return this.http.post(`${this.APIurl}tests/new-questions/`, body);
-    }
+    //     return this.http.post(`${this.APIurl}tests/new-questions/`, body);
+    // }
 
-    getQuestionInfoById(questionId: number): Observable<QuestionInfo> {
-        return this.http.get<QuestionInfo>(`${this.APIurl}question/` + questionId);
-    }
+    // getQuestionInfoById(questionId: number): Observable<QuestionInfo> {
+    //     return this.http.get<QuestionInfo>(`${this.APIurl}question/` + questionId);
+    // }
 
-    updateTestQuestion(info: QuestionInfo) {
-        const body = { Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId, QuestionId: info.QuestionId };
+    // updateTestQuestion(info: QuestionInfo) {
+    //     const body = { Text: info.Text, QuestionType: info.QuestionType, TestId: info.TestId, AreaId: info.AreaId, QuestionId: info.QuestionId };
 
-        return this.http.put(`${this.APIurl}tests/update-questions/`, body);
-    }
+    //     return this.http.put(`${this.APIurl}tests/update-questions/`, body);
+    // }
 
-    updateQuestions(testId: number, questions: QuestionInfo[]) {
-        const body = { testId, questions };
+    // updateQuestions(testId: number, questions: QuestionInfo[]) {
+    //     const body = { testId, questions };
 
-        return this.http.post(`${this.APIurl}test/update-question/`, body);
-    }
+    //     return this.http.post(`${this.APIurl}test/update-question/`, body);
+    // }
 
     // ---- Images ----
 
@@ -121,32 +121,32 @@ export class TestService {
 
     // ---- Results and Areas ----
 
-    getTestResultsByUserId(userId: string): Observable<Results[]> {
-        return this.http.get<Results[]>(`${this.APIurl}results/` + userId);
-    }
+    // getTestResultsByUserId(userId: string): Observable<Results[]> {
+    //     return this.http.get<Results[]>(`${this.APIurl}results/` + userId);
+    // }
 
-    checkUsersTestResult(time:number, answers: UserAnswer[], userId:any, testid:number) {
-        let date = formatDate(new Date(), 'yyyy/MM/dd hh:mm:ss', 'en');
-        const body = { Answers: answers, UserId:userId, TestId:testid, FinishDate:date, UserTime:time};
-        return this.http.post<UserAnswer[]>(`${this.APIurl}test/check-result/`, body);
-    }
+    // checkUsersTestResult(time:number, answers: UserAnswer[], userId:any, testid:number) {
+    //     let date = formatDate(new Date(), 'yyyy/MM/dd hh:mm:ss', 'en');
+    //     const body = { Answers: answers, UserId:userId, TestId:testid, FinishDate:date, UserTime:time};
+    //     return this.http.post<UserAnswer[]>(`${this.APIurl}test/check-result/`, body);
+    // }
 
-    getTestResult(resultId) {
-        return this.http.get<Results>(`${this.APIurl}test/result/`+ resultId);
-    }
+    // getTestResult(resultId) {
+    //     return this.http.get<Results>(`${this.APIurl}test/result/`+ resultId);
+    // }
     
-    updateAreas(areas: Area[], testId: number) {
-        const body = { Areas: areas, TestID: testId };
+    // updateAreas(areas: Area[], testId: number) {
+    //     const body = { Areas: areas, TestID: testId };
 
-        return this.http.post(`${this.APIurl}test/update-areas/`, body);
-    }
+    //     return this.http.post(`${this.APIurl}test/update-areas/`, body);
+    // }
 
-    checkAreasOnDelete(areas: Area[], testId: number): Observable<AreaDeleteInfo[]> {
-        const body = { Areas: areas, TestID: testId };
-        return this.http.post<AreaDeleteInfo[]>(`${this.APIurl}test/check-areas/`, body);
-    }
+    // checkAreasOnDelete(areas: Area[], testId: number): Observable<AreaDeleteInfo[]> {
+    //     const body = { Areas: areas, TestID: testId };
+    //     return this.http.post<AreaDeleteInfo[]>(`${this.APIurl}test/check-areas/`, body);
+    // }
 
-    getResultsInArea(resultId:number) {
-        return this.http.get<ResultByArea[]>(`${this.APIurl}area-results/${resultId}`);
-    }
+    // getResultsInArea(resultId:number) {
+    //     return this.http.get<ResultByArea[]>(`${this.APIurl}area-results/${resultId}`);
+    // }
 }

@@ -8,6 +8,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { UserAnswer } from 'src/app/models/userAnswer';
 import { timer } from 'rxjs';
+import { QuestionService } from 'src/app/services/question.service';
+import { TestResultsService } from 'src/app/services/test-results.service';
 /* tslint:disable */
 @Component({
   selector: 'app-test-process',
@@ -28,6 +30,8 @@ export class TestProcessComponent implements OnInit {
     interval;
 
     constructor(private testService: TestService,
+                private questionService: QuestionService,
+                private testResultService: TestResultsService,
                 private router: Router,
                 private _DomSanitizationService: DomSanitizer,
                 private toastr: ToastrService) 
@@ -81,7 +85,7 @@ export class TestProcessComponent implements OnInit {
             }
         }
 
-        this.testService.getCurrentQuestionID(localStorage.CurrentIndex, localStorage.TestInUseId).subscribe((id:number) => {
+        this.questionService.getCurrentQuestionID(localStorage.CurrentIndex, localStorage.TestInUseId).subscribe((id:number) => {
             if(id>0){
                 this.questionID = id;
                 this.questionNumber = localStorage.CurrentIndex;
@@ -93,7 +97,7 @@ export class TestProcessComponent implements OnInit {
     }
 
     getQuestionInfo() {
-            this.testService.getQuestionInfoById(this.questionID).subscribe( (info) => {
+            this.questionService.getQuestionInfoById(this.questionID).subscribe( (info) => {
             this.info = info;
         });
 
@@ -145,7 +149,7 @@ export class TestProcessComponent implements OnInit {
         this.updateAnswers();
         this.userAnswers = JSON.parse(localStorage.UserAnswers);
         //this.checkAnswers();
-        this.testService.checkUsersTestResult(this.timer,this.userAnswers, localStorage.userId, localStorage.TestInUseId).subscribe((resultId) => {
+        this.testResultService.checkUsersTestResult(this.timer,this.userAnswers, localStorage.userId, localStorage.TestInUseId).subscribe((resultId) => {
             localStorage.UserResultId = resultId;
             this.clearStorage();
             this.router.navigate(['/results']);

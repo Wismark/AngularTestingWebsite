@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/_shared/authentication/auth services/user.service';
 import { UserModel } from 'src/app/models/userModel';
 import { ToastrService } from 'ngx-toastr';
+import { TestResultsService } from 'src/app/services/test-results.service';
 
 @Component({
     selector: 'app-main-page-admin',
@@ -26,7 +27,8 @@ export class MainPageAdminComponent implements OnInit {
     constructor(private userService: UserService,
                 private testService: TestService,
                 private router: Router,
-                private toastr: ToastrService) { }
+                private toastr: ToastrService,
+                private testResultsService: TestResultsService) { }
 
     ngOnInit() {
         this.testService.getTests(false).subscribe(tests => {
@@ -128,7 +130,7 @@ export class MainPageAdminComponent implements OnInit {
     }
 
     userClick() {
-        this.testService.getTestResultsByUserId(this.userForResult).subscribe((results) => {
+        this.testResultsService.getTestResultsByUserId(this.userForResult).subscribe((results) => {
             this.results = results;
         });
     }

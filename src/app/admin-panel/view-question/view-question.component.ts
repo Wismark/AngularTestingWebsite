@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { QuestionInfo } from 'src/app/models/QuestionInfo';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ImageInfo } from 'src/app/models/ImageInfo';
+import { QuestionService } from 'src/app/services/question.service';
 
 /* tslint:disable */
 @Component({
@@ -32,7 +33,8 @@ export class ViewQuestionComponent implements OnInit {
 	constructor(private router: Router,
                 private testService: TestService,
                 private toastr: ToastrService,
-                private _DomSanitizationService: DomSanitizer) { }
+				private _DomSanitizationService: DomSanitizer,
+				private questionService: QuestionService) { }
 
 	ngOnInit() {
 
@@ -41,7 +43,7 @@ export class ViewQuestionComponent implements OnInit {
 			this.questionExists = true;
 			this.title = 'Question edit';
 
-			this.testService.getQuestionInfoById(this.questionID).subscribe( (info) => {
+			this.questionService.getQuestionInfoById(this.questionID).subscribe( (info) => {
 					this.info = info;
 					this.info.QuestionId = this.questionID;
 					this.Qtype = this.info.QuestionType;
@@ -249,7 +251,7 @@ export class ViewQuestionComponent implements OnInit {
 
 		if (this.questionExists) {
 			this.info.QuestionId = this.questionID;
-			this.testService.updateTestQuestion(this.info).subscribe(() => {
+			this.questionService.updateTestQuestion(this.info).subscribe(() => {
 			});			
 			this.testService.addAnswersToQuestion(this.info.QuestionId, this.answers).subscribe(() => {
 			});
@@ -275,7 +277,7 @@ export class ViewQuestionComponent implements OnInit {
 
 		this.info.QuestionType = this.Qtype;
 		this.info.AreaId = this.testAreas[this.areaSelect].TestAreaId;
-		this.testService.addNewTestQuestion(this.info).subscribe((questionId: any) => {
+		this.questionService.addNewTestQuestion(this.info).subscribe((questionId: any) => {
 			this.testService.addAnswersToQuestion(questionId, this.answers).subscribe(() => {
 			});
 			this.testService.addImagesToQuestion(questionId, this.images).subscribe(() => {
